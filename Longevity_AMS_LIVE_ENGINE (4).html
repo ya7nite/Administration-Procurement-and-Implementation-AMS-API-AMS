@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Longevity Group — API-AMS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sky: #5BA8D1; --pale: #EAF5FB; --white: #FFFFFF; --mid: #2E6B91; --ink: #1E3645;
+    --muted: #87A2B0; --border: #DCEBF2; --warn-bg: #FBEAEA; --warn-text: #A33A3A;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--white); font-family: 'Inter', sans-serif; color: var(--ink); scroll-behavior: smooth; }
+  section, .hero { scroll-margin-top: 56px; }
+  .app { max-width: 1080px; margin: 0 auto; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 1px solid var(--border); }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand .mark { width: 38px; height: 38px; border-radius: 50%; background: var(--mid); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .brand .mark img { width: 24px; }
+  .brand .name { font-family: 'Spectral', serif; font-weight: 500; font-size: 17px; color: var(--mid); }
+  .brand .sub { font-size: 11px; color: var(--muted); letter-spacing: 0.04em; }
+  .header-actions { display: flex; align-items: center; gap: 10px; }
+  .icon-btn { background: var(--white); border: 1px solid var(--border); color: var(--mid); font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 16px; cursor: pointer; }
+  .icon-btn:hover { border-color: var(--sky); }
+  .section-nav { position: sticky; top: 0; z-index: 30; display: flex; gap: 4px; overflow-x: auto; padding: 10px 40px; background: rgba(255,255,255,0.96); backdrop-filter: blur(4px); border-bottom: 1px solid var(--border); -webkit-overflow-scrolling: touch; }
+  .section-nav a { flex: none; font-size: 12px; font-weight: 500; color: var(--mid); text-decoration: none; padding: 6px 12px; border-radius: 14px; white-space: nowrap; }
+  .section-nav a:hover { background: var(--pale); }
+  .hero { padding: 32px 40px 6px; }
+  .hero h1 { font-family: 'Spectral', serif; font-weight: 500; font-size: 26px; color: var(--mid); }
+  .intro-text { font-size: 13px; color: var(--muted); margin-top: 8px; max-width: 560px; line-height: 1.55; }
+  .viewing-row { display: flex; align-items: center; gap: 10px; margin-top: 20px; }
+  .viewing-row .eyebrow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+  .scenario-pill { font-family: 'Spectral', serif; font-size: 15px; font-weight: 600; color: var(--mid); background: var(--pale); padding: 5px 14px; border-radius: 14px; }
+  .hero .scenario-name { font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; padding: 20px 40px; }
+  .stat { background: var(--pale); border-radius: 10px; padding: 18px 20px; }
+  .stat .label { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--mid); font-weight: 600; }
+  .stat .value { font-family: 'Spectral', serif; font-size: 26px; color: var(--ink); margin-top: 8px; }
+  .stat .value.neg { color: var(--warn-text); }
+  .stats-secondary { padding-top: 0; }
+  .stats-secondary .stat { background: var(--white); border: 1px solid var(--border); }
+  .stats-secondary .value { font-size: 18px; }
+  .recommendation-line { font-size: 13px; color: var(--mid); margin-top: 12px; padding: 10px 14px; background: #E8F7EE; border-radius: 8px; display: inline-block; }
+  .controls-panel { margin: 4px 40px 28px; background: var(--pale); border-radius: 10px; padding: 20px 22px; }
+  .controls-panel .panel-hint { font-size: 12px; color: var(--mid); margin-bottom: 16px; }
+  .controls-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 28px; }
+  .control-group .glabel { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 600; margin-bottom: 8px; }
+  .pill-group { display: flex; gap: 6px; flex-wrap: wrap; }
+  .pill { background: var(--white); border: 1px solid var(--border); color: var(--mid); font-size: 12px; font-weight: 500; padding: 7px 14px; border-radius: 18px; cursor: pointer; }
+  .pill.active { background: var(--sky); border-color: var(--sky); color: var(--white); }
+  .pill:hover:not(.active) { border-color: var(--sky); }
+  .fx-row { display: flex; align-items: center; gap: 12px; }
+  .fx-row input[type=range] { flex: 1; accent-color: var(--sky); }
+  .fx-row span { font-size: 12px; color: var(--mid); font-weight: 600; min-width: 110px; }
+  .reset-link { background: none; border: none; font-size: 12px; color: var(--mid); text-decoration: underline; cursor: pointer; margin-top: 16px; padding: 0; }
+  section { padding: 8px 40px 44px; }
+  .section-title { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mid); font-weight: 700; display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+  .section-intro { font-size: 13px; color: var(--muted); margin: -10px 0 18px; max-width: 600px; line-height: 1.55; }
+  .pw-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .pw-table th { text-align: left; color: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; padding: 0 14px 10px; border-bottom: 1px solid var(--border); }
+  .pw-table td { padding: 11px 14px; border-bottom: 1px solid var(--pale); }
+  .pw-table tr { cursor: pointer; }
+  .pw-table tr:hover td { background: var(--pale); }
+  .pw-table tr.selected td { background: #DCEEF7; }
+  .pw-table td.num { font-family: 'Spectral', serif; font-size: 15px; }
+  .pw-table td.neg { color: var(--warn-text); }
+  .badge { font-size: 11px; padding: 2px 9px; border-radius: 10px; background: var(--pale); color: var(--mid); font-weight: 500; }
+  .badge.bridge { background: var(--warn-bg); color: var(--warn-text); }
+  .badge.recommended { background: #E8F7EE; color: #2C8049; margin-left: 6px; }
+  .conf-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+  .mix-row { display: grid; grid-template-columns: 130px 1fr 70px; align-items: center; gap: 14px; padding: 9px 0; }
+  .mix-row .mname { font-size: 13px; font-weight: 500; }
+  .mix-bar { height: 18px; background: var(--pale); border-radius: 4px; overflow: hidden; display: flex; }
+  .mix-bar .rec { background: var(--sky); }
+  .mix-bar .trans { background: var(--border); }
+  .mix-row .mpct { font-size: 13px; color: var(--mid); text-align: right; font-weight: 500; }
+  .mix-legend { display: flex; gap: 20px; margin-top: 16px; font-size: 12px; color: var(--muted); }
+  .mix-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .mix-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .cost-legend { display: flex; gap: 18px; margin-top: 10px; font-size: 11px; color: var(--muted); flex-wrap: wrap; }
+  .cost-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .cost-legend i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .mix-summary { display: flex; align-items: center; gap: 18px; margin-bottom: 18px; background: var(--pale); border-radius: 10px; padding: 12px 18px; }
+  .mix-summary-text { font-size: 13px; color: var(--mid); max-width: 380px; }
+  .torn-row { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 14px; padding: 10px 0; }
+  .torn-row .tname { font-size: 13px; font-weight: 500; }
+  .torn-track { position: relative; height: 22px; background: var(--pale); border-radius: 4px; }
+  .torn-bar { position: absolute; top: 0; height: 100%; border-radius: 4px; }
+  .torn-bar.best { background: var(--sky); }
+  .torn-bar.worst { background: var(--warn-text); opacity: 0.55; }
+  .torn-vals { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 3px; }
+  .rep-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .rep-card { background: var(--pale); border-radius: 10px; padding: 16px 18px; }
+  .rep-card .rname { font-size: 13px; font-weight: 600; color: var(--mid); }
+  .rep-card .rrow { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .rep-card .rrow b { font-family: 'Spectral', serif; font-size: 14px; color: var(--ink); font-weight: 500; }
+  .detail-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; background: var(--pale); border-radius: 10px; padding: 18px 20px; }
+  .detail-item { display: flex; flex-direction: column; gap: 6px; }
+  .detail-item span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .detail-item b { font-family: 'Spectral', serif; font-size: 16px; color: var(--ink); font-weight: 500; }
+  .detail-empty { background: var(--pale); border-radius: 10px; padding: 24px; font-size: 13px; color: var(--muted); text-align: center; }
+  .role-panel { margin-top: 14px; background: var(--pale); border-radius: 10px; padding: 16px 20px; }
+  .role-panel-title { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mid); font-weight: 700; margin-bottom: 12px; }
+  .role-row { display: grid; grid-template-columns: 1fr 110px 70px; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .role-row:last-child { border-bottom: none; }
+  .role-row .role-name { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .role-default { font-size: 11px; color: var(--muted); }
+  .role-input, .equip-input, .rent-input, .open-month-input { width: 64px; padding: 5px 8px; border: 1px solid var(--border); border-radius: 6px; font-size: 13px; font-family: 'Inter', sans-serif; color: var(--ink); }
+  .rent-input, .open-month-input { width: 100px; }
+  .role-input:focus { outline: none; border-color: var(--sky); }
+  .risk-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+  .risk-list li { background: var(--pale); border-radius: 8px; padding: 14px 16px; font-size: 13px; color: var(--ink); line-height: 1.55; border-left: 3px solid var(--sky); }
+  .risk-list li b { color: var(--mid); }
+  .live-check-panel { background: var(--pale); border-radius: 10px; padding: 18px 20px; margin-top: 14px; }
+  .live-check-row { display: flex; gap: 10px; margin-bottom: 4px; }
+  .live-check-row input { flex: 1; padding: 9px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; font-family: 'Inter', sans-serif; }
+  .live-check-row input:focus { outline: none; border-color: var(--sky); }
+  .live-check-result { margin-top: 16px; background: var(--white); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; font-size: 13px; line-height: 1.6; }
+  .live-check-result .lc-timestamp { font-size: 11px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .live-check-result .lc-sources { margin-top: 10px; font-size: 12px; color: var(--muted); }
+  .live-check-result .lc-sources a { color: var(--sky); text-decoration: none; }
+  .tip { display: inline-flex; align-items: center; justify-content: center; width: 14px; height: 14px; border-radius: 50%; background: var(--border); color: var(--mid); font-size: 10px; font-weight: 700; margin-left: 5px; cursor: help; vertical-align: middle; }
+  .shared-tooltip { display: none; position: fixed; background: var(--ink); color: #fff; font-size: 11px; font-weight: 400; padding: 8px 10px; border-radius: 6px; max-width: 220px; line-height: 1.4; z-index: 500; text-align: left; pointer-events: none; }
+  .shared-tooltip.show { display: block; }
+
+  .one-pager-overlay { display: none; position: fixed; inset: 0; background: rgba(30,54,69,0.55); z-index: 100; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 30px 16px; }
+  .one-pager-overlay.open { display: flex; }
+  .one-pager { background: var(--white); border-radius: 12px; max-width: 900px; width: 100%; padding: 30px 40px; position: relative; }
+  .one-pager-actions { position: sticky; top: -30px; display: flex; justify-content: flex-end; gap: 8px; margin: -30px -40px 14px; padding: 14px 40px; background: var(--white); border-radius: 12px 12px 0 0; border-bottom: 1px solid var(--border); }
+  @media print {
+    body:not(.printing-summary) .one-pager-overlay { display: none !important; }
+    body.printing-summary .app { display: none; }
+    body.printing-summary .one-pager-actions { display: none !important; }
+  }
+  .op-head { display: flex; align-items: center; gap: 14px; border-bottom: 2px solid var(--mid); padding-bottom: 16px; margin-bottom: 20px; }
+  .op-head img { width: 40px; height: 40px; border-radius: 50%; background: var(--mid); padding: 8px; }
+  .op-head .op-name { font-family: 'Spectral', serif; font-size: 18px; color: var(--mid); font-weight: 600; }
+  .op-head .op-sub { font-size: 12px; color: var(--muted); }
+  .op-scenario { font-family: 'Spectral', serif; font-size: 22px; color: var(--ink); margin-bottom: 4px; }
+  .op-scenario-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .op-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .op-stats .stat { border: 1px solid var(--border); }
+  .op-chart { margin-bottom: 20px; }
+  .op-takeaways { list-style: none; margin-bottom: 20px; }
+  .op-takeaways li { font-size: 13px; padding: 6px 0 6px 18px; position: relative; }
+  .op-takeaways li::before { content: "→"; position: absolute; left: 0; color: var(--sky); font-weight: 700; }
+  .op-footer { font-size: 10px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 10px; margin-top: 10px; }
+  .narrative-text { background: var(--pale); border-radius: 10px; padding: 22px 24px; font-family: 'Spectral', serif; font-size: 16px; line-height: 1.7; color: var(--ink); }
+  footer { padding: 24px 40px 50px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); line-height: 1.6; }
+  .scroll-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .chart-inner { min-width: 560px; }
+
+  @media (max-width: 700px) {
+    header { padding: 14px 18px; flex-wrap: wrap; gap: 10px; }
+    .header-actions { flex-wrap: wrap; width: 100%; }
+    .header-actions .icon-btn { font-size: 11px; padding: 6px 10px; flex: 1; text-align: center; }
+    .brand .name { font-size: 15px; }
+    .brand .sub { font-size: 10px; }
+    .hero { padding: 22px 18px 4px; }
+    .hero h1 { font-size: 19px; line-height: 1.3; }
+    .intro-text { font-size: 12.5px; }
+    .viewing-row { flex-wrap: wrap; }
+    .scenario-pill { font-size: 13px; }
+    .stats { grid-template-columns: 1fr 1fr; gap: 10px; padding: 16px 18px; }
+    .stat { padding: 14px 14px; }
+    .stat .value { font-size: 21px; }
+    .controls-panel { margin: 4px 18px 22px; padding: 16px 16px; }
+    .controls-grid { grid-template-columns: 1fr; gap: 16px; }
+    section { padding: 6px 18px 34px; }
+    .section-intro { margin: -6px 0 14px; }
+    .pw-table { font-size: 12px; }
+    .pw-table th, .pw-table td { padding: 9px 10px; white-space: nowrap; }
+    .rep-grid { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr 1fr; padding: 14px 16px; }
+    .mix-row { grid-template-columns: 86px 1fr 42px; gap: 8px; }
+    .torn-row { grid-template-columns: 96px 1fr; gap: 8px; }
+    .torn-row .tname { font-size: 12px; }
+    .role-row { grid-template-columns: 1fr; gap: 4px; padding: 10px 0; }
+    .role-row .role-default { order: 2; }
+    .role-row .role-input, .role-row .equip-input, .role-row .rent-input { order: 3; width: 100%; }
+    .mix-summary { flex-wrap: wrap; }
+    .mix-summary-text { max-width: 100%; }
+    .fx-row span { min-width: 90px; font-size: 11px; }
+    footer { padding: 18px 18px 36px; }
+  }
+
+  @media (max-width: 420px) {
+    .stats { grid-template-columns: 1fr; }
+    .detail-grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    header .header-actions, .controls-panel, .pw-table tr { cursor: default; }
+    .icon-btn { display: none; }
+    body { font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="brand">
+      <div class="mark"><img src="data:image/png;base64,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" alt="Longevity Group"></div>
+      <div>
+        <div class="name">Longevity Group</div>
+        <div class="sub">API-AMS — Administration, Procurement &amp; Implementation</div>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="onePagerBtn">📄 1-page summary</button>
+      <button class="icon-btn" id="printBtn">⤓ Export / Print</button>
+    </div>
+  </header>
+
+  <nav class="section-nav">
+    <a href="#sec-overview">Overview</a>
+    <a href="#sec-cash">Cash &amp; costs</a>
+    <a href="#sec-routes">Routes</a>
+    <a href="#sec-units">Business units</a>
+    <a href="#sec-revenue">Revenue</a>
+    <a href="#sec-expansion">Expansion</a>
+    <a href="#sec-sensitivity">Sensitivity</a>
+    <a href="#sec-sources">Sources</a>
+    <a href="#sec-risks">Risks</a>
+    <a href="#sec-summary">AI summary</a>
+    <a href="#sec-compare">Compare</a>
+  </nav>
+
+  <div class="hero" id="sec-overview">
+    <h1>API-AMS — Dubai Flagship Financial Model</h1>
+    <p class="intro-text">Longevity Group's Administration, Procurement &amp; Implementation system. Adjust any control below and the 36-month cash position, spend, and time to breakeven recalculate instantly — this is the real financial model, not a mock-up.</p>
+    <div class="viewing-row">
+      <span class="eyebrow">Currently viewing</span>
+      <span id="scenarioTitle" class="scenario-pill">Dubai Direct Flagship — Base</span>
+    </div>
+    <div class="scenario-name" id="scenarioSub"></div>
+    <div class="recommendation-line" id="recommendationLine"></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="label">Net cash — 36 months</div><div class="value" id="statNetCash">—</div></div>
+    <div class="stat"><div class="label">Total spend — 36 months</div><div class="value" id="statBurn">—</div></div>
+    <div class="stat"><div class="label">Time to breakeven<span class="tip" data-tooltip="The first month cumulative cash stops falling and turns positive." tabindex="0">?</span></div><div class="value" id="statBreakeven">—</div></div>
+    <div class="stat"><div class="label">Recurring revenue</div><div class="value" id="statRecurring">—</div></div>
+  </div>
+  <div class="stats stats-secondary">
+    <div class="stat"><div class="label">First revenue</div><div class="value" id="statFirstRevenue">—</div></div>
+    <div class="stat"><div class="label">Transfer cost — 36 months<span class="tip" data-tooltip="Cost of physically relocating a unit from a bridge market to Dubai — only applies to bridge routes." tabindex="0">?</span></div><div class="value" id="statTransferCost">—</div></div>
+  </div>
+
+  <section style="padding-top:0;" id="sec-cash">
+    <div class="section-title">Cash position over time</div>
+    <p class="section-intro">Cumulative cash month by month for the next 3 years — the dip is the build-out, the climb is the business paying it back.</p>
+    <div class="scroll-wrap"><div id="cashChartBox" class="chart-inner"></div></div>
+  </section>
+
+  <section style="padding-top:0;">
+    <div class="section-title">Where the money goes</div>
+    <p class="section-intro">Same 36 months, broken down by category — rent, payroll, day-to-day running costs, and one-time build-out spend.</p>
+    <div class="scroll-wrap"><div id="costChartBox" class="chart-inner"></div></div>
+  </section>
+
+  <div class="controls-panel">
+    <div class="panel-hint">Change anything below — pathway, pricing tier, rent location, supplier strategy — and every number on this page updates instantly.</div>
+    <div class="controls-grid">
+      <div class="control-group"><div class="glabel">Investment level</div><div class="pill-group" id="tierPills"></div></div>
+      <div class="control-group"><div class="glabel">Supplier strategy</div><div class="pill-group" id="procPills"></div></div>
+      <div class="control-group"><div class="glabel">Rent location</div><div class="pill-group" id="rentPills"></div></div>
+      <div class="control-group"><div class="glabel">Planning style<span class="tip" data-tooltip="&quot;Simplified&quot; assumes things go roughly to plan. &quot;Realistic&quot; adds friction for licensing delays, partner readiness, and approvals." tabindex="0">?</span></div><div class="pill-group" id="modelPills"></div></div>
+      <div class="control-group"><div class="glabel">Execution risk<span class="tip" data-tooltip="How much extra delay to build in for staffing, partners, and approvals running behind schedule." tabindex="0">?</span></div><div class="pill-group" id="depPills"></div></div>
+      <div class="control-group"><div class="glabel">Risk outlook<span class="tip" data-tooltip="Adjusts how much licensing delay to expect for each business unit — affects timing and cash regardless of planning style." tabindex="0">?</span></div><div class="pill-group" id="riskPills"></div></div>
+      <div class="control-group">
+        <div class="glabel">Exchange rate (AED per USD)</div>
+        <div class="fx-row"><input type="range" id="fxSlider" min="2.5" max="5" step="0.01"><span id="fxValue"></span></div>
+      </div>
+      <div class="control-group">
+        <div class="glabel">Follow-on franchise sites<span class="tip" data-tooltip="How many additional sites to assume when totalling up franchise CAPEX and royalty income below." tabindex="0">?</span></div>
+        <div class="fx-row"><input type="range" id="sitesSlider" min="1" max="15" step="1"><span id="sitesValue"></span></div>
+      </div>
+    </div>
+    <button class="reset-link" id="resetBtn">Reset to baseline</button>
+  </div>
+
+  <section id="sec-routes">
+    <div class="section-title">Expansion routes</div>
+    <p class="section-intro">Different ways to launch and grow — open everything in Dubai at once, stage it gradually, or test in a lower-cost market first before transferring to Dubai. Click any row to load it above.</p>
+    <div class="scroll-wrap">
+    <table class="pw-table">
+      <thead><tr><th>Rank</th><th>Route</th><th>Bridge market</th><th>Data confidence<span class="tip" data-tooltip="How well-sourced the underlying cost data is. Dubai is based on named market benchmarks; bridge markets use an estimated multiplier." tabindex="0">?</span></th><th>36-month net cash</th><th>36-month spend</th><th>Breakeven</th></tr></thead>
+      <tbody id="pwBody"></tbody>
+    </table>
+    </div>
+    <p class="section-intro" style="margin-top:22px;">Robustness check — same routes, but tested across every combination of risk outlook and planning style, to see which one holds up even in a bad case.</p>
+    <div class="scroll-wrap">
+    <table class="pw-table">
+      <thead><tr><th>Route</th><th>Average outcome</th><th>Worst case</th><th>Best case</th></tr></thead>
+      <tbody id="robustBody"></tbody>
+    </table>
+    </div>
+  </section>
+
+  <section id="sec-units">
+    <div class="section-title">Business units</div>
+    <p class="section-intro">Longevity Group is nine spaces under one roof — gym, clinic, café, retail, and more. Click one to see its own rent, staffing, and revenue, or force it open or closed regardless of the selected route (e.g. run only Clinic and Pets).</p>
+    <div class="pill-group" id="modulePills" style="margin-bottom:16px;"></div>
+    <div id="moduleDetailBox"></div>
+  </section>
+
+  <section id="sec-revenue">
+    <div class="section-title">Revenue mix</div>
+    <p class="section-intro">How much of each business unit's income is predictable membership/subscription revenue versus one-off sales.</p>
+    <div class="mix-summary">
+      <div id="mixDonut"></div>
+      <div class="mix-summary-text">Overall, this much of total monthly revenue is recurring across the whole business.</div>
+    </div>
+    <div id="mixBody"></div>
+    <div class="mix-legend"><span><i style="background:var(--sky)"></i>Recurring (membership)</span><span><i style="background:var(--border)"></i>One-off sales</span></div>
+  </section>
+
+  <section id="sec-expansion">
+    <div class="section-title">Expansion economics</div>
+    <p class="section-intro">What it costs a franchisee or partner to open one new site of each format, and how fast they earn that back.</p>
+    <div id="repTotals" style="margin-bottom:18px;"></div>
+    <div class="rep-grid" id="repBody"></div>
+  </section>
+
+  <section id="sec-sensitivity">
+    <div class="section-title">What matters most</div>
+    <p class="section-intro">Which single decision moves the 36-month cash position the most, compared against your current scenario.</p>
+    <div id="tornBody"></div>
+  </section>
+
+  <section id="sec-summary">
+    <div class="section-title">AI executive summary</div>
+    <p class="section-intro">A written summary of the scenario you're currently viewing, ready to drop into an investor deck or memo.</p>
+    <button class="icon-btn" id="narrativeBtn" style="margin-bottom:16px;">✦ Generate summary</button>
+    <div id="narrativeBox"><div class="detail-empty">Click "Generate summary" for an investor-ready write-up of the current scenario.</div></div>
+  </section>
+
+  <section id="sec-sources">
+    <div class="section-title">Where the numbers come from</div>
+    <p class="section-intro">Every cost benchmark in this model is tagged with how it was sourced. This is the honest count, not a marketing claim.</p>
+    <ul class="risk-list">
+      <li><b>Rent (7 locations):</b> 6 of 7 are sourced from public Dubai commercial real-estate market guides; 1 is an inferred estimate. Medium confidence throughout — useful for planning, not a signed lease quote.</li>
+      <li><b>Staffing (18 roles):</b> 7 of 18 roles are sourced from UAE salary and recruitment sites; the other 11 are inferred from comparable roles where no direct listing existed. Medium confidence throughout.</li>
+      <li><b>Fit-out cost (9 business units):</b> 3 of 9 are sourced from general interior fit-out cost guides; 6 are inferred working estimates calibrated against those sources. Medium confidence throughout.</li>
+      <li><b>Procurement &amp; equipment:</b> benchmark unit costs, lead times, and shipping/customs friction are working assumptions calibrated for planning purposes — not live supplier quotes.</li>
+    </ul>
+
+    <button class="icon-btn" id="liveCheckToggle" style="margin-top:18px;">🔍 Check a number live on the web</button>
+    <div id="liveCheckPanel" class="live-check-panel" style="display:none;">
+      <p class="section-intro" style="margin-top:14px;">Ask about any cost this model assumes — this runs a real web search right now, it's not pulling from the benchmarks above.</p>
+      <div class="live-check-row">
+        <input type="text" id="liveCheckInput" placeholder="e.g. current monthly rent for a 250m² gym space in Dubai" />
+        <button class="icon-btn" id="liveCheckBtn">Search now</button>
+      </div>
+      <div id="liveCheckResult"></div>
+    </div>
+  </section>
+
+  <section id="sec-risks">
+    <div class="section-title">Key risks &amp; assumptions</div>
+    <p class="section-intro">What this model is confident about, and what still needs real-world validation before final investment terms.</p>
+    <ul class="risk-list">
+      <li><b>Bridge markets are estimated, not locally sourced.</b> Turkey, Geneva, and Palma figures use a flat multiplier applied to Dubai benchmarks — there is no local rent or staffing data for those markets yet, which is why their data confidence score is lower.</li>
+      <li><b>Recurring-revenue share is a working assumption.</b> The % of income treated as membership/subscription per business unit reflects typical mix for that category, not measured historical data from this venture.</li>
+      <li><b>Cost benchmarks are public-market estimates, not signed quotes.</b> Rent, staffing, and fit-out figures are calibrated from named market sources but should be confirmed with real contracts before committing capital.</li>
+      <li><b>Timelines assume an on-schedule build-out.</b> Real-world delays in licensing, hiring, or supply chains would push the breakeven month later than shown here.</li>
+      <li><b>Procurement includes estimated friction, not supplier quotes.</b> Shipping, customs, and installation costs by location are planning estimates and should be replaced with real supplier quotes ahead of committing spend.</li>
+    </ul>
+  </section>
+
+  <section id="sec-compare">
+    <div class="section-title">Compare two scenarios</div>
+    <p class="section-intro">Pin your current setup, then change the controls above — this table will keep both side by side.</p>
+    <button class="icon-btn" id="pinBtn" style="margin-bottom:16px;">📌 Pin current scenario</button>
+    <div id="comparePanel"></div>
+  </section>
+
+  <footer>
+    This is a working financial model, not a static presentation — every figure above recalculates in real time as assumptions change.
+    Figures are modeled estimates based on current market benchmarks and operating assumptions; intended to support investment discussion, not as a guaranteed forecast.
+  </footer>
+</div>
+
+<div id="sharedTooltip" class="shared-tooltip"></div>
+
+<div id="onePagerOverlay" class="one-pager-overlay">
+  <div class="one-pager">
+    <div class="one-pager-actions">
+      <button class="icon-btn" id="onePagerPrintBtn">⤓ Print / Save as PDF</button>
+      <button class="icon-btn" id="onePagerCloseBtn">✕ Close</button>
+    </div>
+    <div id="onePager"></div>
+  </div>
+</div>
+
+<!--
+  Internal note for whoever maintains this page: this runs entirely client-side using the
+  bundled calculation engine below. Two features call a large-language-model API directly
+  from the browser: "Generate summary" (writes the narrative) and "Check a number live on
+  the web" in the Sources section (runs a real web search). If this page is hosted outside
+  an environment that already proxies that call, route both through your own backend instead
+  so your API credentials stay server-side. Minimal example (Node + Express):
+
+  const express = require('express');
+  const app = express();
+  app.use(express.json());
+  app.post('/api/narrative', async (req, res) => {
+    const r = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({ model: 'claude-sonnet-4-6', max_tokens: 600, messages: [{ role: 'user', content: req.body.prompt }], tools: req.body.tools || undefined }),
+    });
+    res.json(await r.json());
+  });
+  app.listen(3000);
+
+  Then change the fetch URL in both places in the script below from
+  'https://api.anthropic.com/v1/messages'  to  '/api/narrative'
+  and send { prompt, tools } instead of { model, max_tokens, messages, tools }.
+-->
+
+
+<script>
+// ============================================================
+// Longevity AMS — Native calculation engine
+// Ported faithfully from the audited Excel workbook (Blocks 1-2)
+// Includes the 3 verified bug fixes: AED->USD conversion,
+// FTE-vs-payroll fix, and blank-module N() guard.
+// ============================================================
+
+const MODULES = ['PublicCore','Kitchen','Cafe','Store','Gym','Pets','Apartment','Containers','Clinic'];
+
+const RENT_BENCHMARKS = {
+  'Dubai Mixed-Use Base':          { usdPerM2: 484 },
+  'Business Bay Premium':          { usdPerM2: 938 },
+  'JLT Practical':                 { usdPerM2: 322 },
+  'Dubai Marina Retail-Wellness':  { usdPerM2: 879 },
+  'Al Quoz Gym-Capable':           { usdPerM2: 337 },
+  'DIFC Fringe Premium Medical':   { usdPerM2: 879 },
+  'Dubai Healthcare City Medical': { usdPerM2: 806 },
+};
+
+const GEOGRAPHY = {
+  'Dubai':     { rent: 1,    license: 1,    staff: 1,    fitout: 1,    revenue: 1,    confidence: 9 },
+  'Turkey':    { rent: 0.55, license: 0.6,  staff: 0.65, fitout: 0.75, revenue: 0.6,  confidence: 5 },
+  'Geneva':    { rent: 1.35, license: 0.85, staff: 1.8,  fitout: 1.25, revenue: 1.2,  confidence: 5 },
+  'Palma':     { rent: 0.75, license: 0.7,  staff: 0.8,  fitout: 0.85, revenue: 0.72, confidence: 5 },
+  'UAE Other': { rent: 0.85, license: 0.9,  staff: 0.9,  fitout: 0.95, revenue: 0.85, confidence: 6 },
+  'None':      { rent: 1,    license: 1,    staff: 1,    fitout: 1,    revenue: 1,    confidence: 9 },
+};
+
+const RISK_MULTIPLIER = { Optimistic: 0.85, Expected: 1, Pessimistic: 1.2 };
+const LICENSE_DELAY_MODE = { Optimistic: 'Low', Expected: 'Base', Pessimistic: 'High' };
+const MODEL_LAYER_MULTIPLIER = { Simplified: 0.85, Realistic: 1.15 };
+const DEPENDENCY_MULTIPLIER = { Light: 0.8, Base: 1, Heavy: 1.25 };
+const PROCUREMENT_POSTURE = {
+  'Low-cost':          { costMult: 0.92, leadMult: 1.1,  shipMult: 0.95 },
+  'Balanced':          { costMult: 1,    leadMult: 1,    shipMult: 1 },
+  'Premium':           { costMult: 1.08, leadMult: 0.95, shipMult: 1.05 },
+  'Fastest-available': { costMult: 1.15, leadMult: 0.85, shipMult: 1.1 },
+};
+
+// Module-level base assumptions (AMS_ASSUMPTIONS rows 94-103)
+const MODULE_BASE = {
+  PublicCore: { fitoutMonths: 2, baseLicenseDelay: 2, baseProcLead: 2, complexityWeight: 4, area: 160 },
+  Kitchen:    { fitoutMonths: 2, baseLicenseDelay: 2, baseProcLead: 2, complexityWeight: 3, area: 35 },
+  Cafe:       { fitoutMonths: 2, baseLicenseDelay: 2, baseProcLead: 2, complexityWeight: 3, area: 35 },
+  Store:      { fitoutMonths: 1, baseLicenseDelay: 1, baseProcLead: 1, complexityWeight: 2, area: 20 },
+  Gym:        { fitoutMonths: 2, baseLicenseDelay: 2, baseProcLead: 3, complexityWeight: 5, area: 250 },
+  Pets:       { fitoutMonths: 2, baseLicenseDelay: 2, baseProcLead: 3, complexityWeight: 5, area: 150 },
+  Apartment:  { fitoutMonths: 1, baseLicenseDelay: 1, baseProcLead: 2, complexityWeight: 3, area: 50 },
+  Containers: { fitoutMonths: 1, baseLicenseDelay: 1, baseProcLead: 4, complexityWeight: 4, area: 50 },
+  Clinic:     { fitoutMonths: 3, baseLicenseDelay: 6, baseProcLead: 4, complexityWeight: 6, area: 250 },
+};
+
+const LICENSING_BENCHMARKS = {
+  PublicCore: { Low: 1,   Base: 1.5, High: 2.5 },
+  Kitchen:    { Low: 1.5, Base: 2.5, High: 4 },
+  Cafe:       { Low: 1.5, Base: 2.5, High: 4 },
+  Store:      { Low: 0.5, Base: 1,   High: 2 },
+  Gym:        { Low: 1,   Base: 1.5, High: 2.5 },
+  Pets:       { Low: 2,   Base: 3,   High: 4.5 },
+  Apartment:  { Low: 0.5, Base: 1,   High: 1.5 },
+  Containers: { Low: 1,   Base: 2,   High: 3 },
+  Clinic:     { Low: 3,   Base: 4.5, High: 6 }, // clinic override defaults to Base; AMS_CONTROLS!B51 manual override not modeled in this prototype
+};
+
+const DEPENDENCIES = {
+  PublicCore: 1, Kitchen: 1, Cafe: 1, Store: 0, Gym: 2, Pets: 3, Apartment: 1, Containers: 3, Clinic: 4,
+};
+const MODULE_COMPLEXITY = {
+  PublicCore: 3.333, Kitchen: 5.333, Cafe: 4.333, Store: 3.333, Gym: 7.333, Pets: 7, Apartment: 5, Containers: 7, Clinic: 10,
+};
+
+const FITOUT_BENCHMARKS = {
+  PublicCore: { Lean: 320,  Base: 381,  Premium: 495 },
+  Kitchen:    { Lean: 1800, Base: 2890, Premium: 4500 },
+  Cafe:       { Lean: 950,  Base: 150,  Premium: 6500 },
+  Store:      { Lean: 900,  Base: 150,  Premium: 4000 },
+  Gym:        { Lean: 120,  Base: 200,  Premium: 400 },
+  Pets:       { Lean: 1800, Base: 2340, Premium: 7800 },
+  Apartment:  { Lean: 1600, Base: 4300, Premium: 6000 },
+  Containers: { Lean: 350,  Base: 438,  Premium: 1200 },
+  Clinic:     { Lean: 3000, Base: 4418, Premium: 6000 },
+};
+
+// Fixed monthly OPEX components (cleaning+maintenance+insurance+systems), pre-multiplier
+const FITOUT_OPEX_FIXED = {
+  PublicCore: 2600, Kitchen: 1000, Cafe: 1070, Store: 540, Gym: 3700,
+  Pets: 3100, Apartment: 700, Containers: 700, Clinic: 4700,
+};
+
+// Staffing benchmarks: market base salary AED/mo (frozen, Block 2 fix applied at use-time via /FX)
+const STAFFING_BENCHMARKS_AED = {
+  'General Manager / Platform Ops': 17501,
+  'Reception / Concierge': 4883,
+  'Events / Conference Coordinator': 7500,
+  'Kitchen Lead': 5000,
+  'Kitchen Assistant': 4090,
+  'Cafe Lead / Service': 5500,
+  'Retail Attendant': 4854,
+  'Gym Lead / Trainer': 17500,
+  'Trainer / Coach': 5000,
+  'Recovery Specialist': 3883,
+  'Vet': 3883,
+  'Vet Nurse / Assistant': 8000,
+  'Apartment Showcase Host': 27701,
+  'Modular Showcase Technician': 5400,
+  'Functional Medicine Doctor': 25000,
+  'Nurse': 8125,
+  'Phlebotomy / Lab Tech': 9600,
+  'Clinic Ops Manager': 13000,
+};
+
+// role: [module, lean qty, base qty, premium qty]
+const STAFFING_ROLES = [
+  ['General Manager / Platform Ops', 'PublicCore', 0.2, 0.5, 1],
+  ['Reception / Concierge', 'PublicCore', 1, 2, 3],
+  ['Events / Conference Coordinator', 'PublicCore', 0, 1, 1],
+  ['Kitchen Lead', 'Kitchen', 1, 1, 2],
+  ['Kitchen Assistant', 'Kitchen', 0, 1, 1],
+  ['Cafe Lead / Service', 'Cafe', 1, 1, 2],
+  ['Retail Attendant', 'Store', 1, 1, 2],
+  ['Gym Lead / Trainer', 'Gym', 1, 1, 2],
+  ['Trainer / Coach', 'Gym', 1, 2, 3],
+  ['Recovery Specialist', 'Gym', 0, 1, 2],
+  ['Vet', 'Pets', 1, 1, 2],
+  ['Vet Nurse / Assistant', 'Pets', 1, 1, 2],
+  ['Apartment Showcase Host', 'Apartment', 0, 0.5, 1],
+  ['Modular Showcase Technician', 'Containers', 0, 1, 1],
+  ['Functional Medicine Doctor', 'Clinic', 1, 1, 2],
+  ['Nurse', 'Clinic', 1, 2, 3],
+  ['Phlebotomy / Lab Tech', 'Clinic', 0, 1, 1],
+  ['Clinic Ops Manager', 'Clinic', 1, 1, 1],
+];
+
+// Procurement: [module, equipment, vendorClass, leanQty, baseQty, premiumQty, unitCostBase, leadBaseWeeks, shipPct, customsPct, installLagBase, annualServicePct]
+const PROCUREMENT_LINES = [
+  ['PublicCore','Conference AV / digital screens','AV Integrator',1,1,1,15000,6,0.03,0.05,0.25,0.05],
+  ['Kitchen','Kitchen equipment pack','Foodservice Integrator',1,1,1,20000,8,0.04,0.05,0.5,0.06],
+  ['Cafe','Cafe equipment pack','Cafe Fit-Out Vendor',1,1,1,15000,6,0.04,0.05,0.25,0.05],
+  ['Store','Retail fixtures + display','Retail Fixture Vendor',1,1,1,8000,4,0.02,0.05,0.1,0.02],
+  ['Gym','Smart bikes','Fitness OEM',1,2,3,5000,6,0.04,0.05,0.1,0.05],
+  ['Gym','EWOT setup','Wellness OEM',1,2,3,12000,8,0.06,0.05,0.25,0.06],
+  ['Gym','Hypoxic / IHT setup','Respiratory / training OEM',1,2,3,18000,10,0.06,0.05,0.25,0.08],
+  ['Gym','Sauna + cold plunge suite','Wellness OEM',1,1,1,22000,8,0.06,0.05,0.5,0.06],
+  ['Pets','Vet exam equipment pack','Vet OEM',2,2,3,6000,6,0.04,0.05,0.1,0.04],
+  ['Pets','Underwater treadmill','Vet Rehab OEM',1,1,1,25000,10,0.08,0.05,0.5,0.08],
+  ['Pets','Pet-safe PEMF / red light','Vet Wellness OEM',1,2,2,8000,6,0.04,0.05,0.1,0.05],
+  ['Apartment','AI workstation wall','Workstation Integrator',1,1,1,9000,4,0.03,0.05,0.1,0.04],
+  ['Apartment','AI kitchen / digital fridge','Smart Appliance OEM',1,1,1,12000,8,0.05,0.05,0.25,0.05],
+  ['Apartment','IHHT / compact exercise kit','Wellness OEM',1,1,2,15000,8,0.06,0.05,0.25,0.07],
+  ['Containers','Container shell + conversion','Container/Modular Vendor',2,2,2,45000,12,0.05,0.05,0.75,0.04],
+  ['Containers','Diagnostics pod fit-out','Modular Med Fit-Out',1,1,1,20000,8,0.04,0.05,0.5,0.05],
+  ['Containers','Therapy / recovery pod fit-out','Modular Med Fit-Out',1,1,1,25000,8,0.04,0.05,0.5,0.05],
+  ['Clinic','HBOT monoplace chamber','Medical OEM',1,2,3,90000,16,0.08,0.05,0.75,0.1],
+  ['Clinic','IHHT station','Medical / wellness OEM',1,2,3,22000,8,0.06,0.05,0.25,0.08],
+  ['Clinic','IV chair','Medical furniture OEM',1,3,4,2500,4,0.03,0.05,0.1,0.03],
+  ['Clinic','Red light / PEMF bundle','Wellness OEM',1,2,3,12000,6,0.04,0.05,0.1,0.06],
+  ['Clinic','PRP / diagnostics pack','Medical OEM',1,1,1,15000,6,0.04,0.05,0.25,0.05],
+];
+
+const CUSTOMS_INSTALL_GEO = {
+  Dubai:     { shipMult: 1,    customsAdd: 0.02, customsDelayWk: 2, installDelayAddWk: 1 },
+  Turkey:    { shipMult: 1.08, customsAdd: 0.04, customsDelayWk: 3, installDelayAddWk: 2 },
+  Geneva:    { shipMult: 1.12, customsAdd: 0.05, customsDelayWk: 3, installDelayAddWk: 2 },
+  Palma:     { shipMult: 1.1,  customsAdd: 0.04, customsDelayWk: 3, installDelayAddWk: 2 },
+  'UAE Other': { shipMult: 0.96, customsAdd: 0.02, customsDelayWk: 2, installDelayAddWk: 1 },
+  None:      { shipMult: 1,    customsAdd: 0,    customsDelayWk: 0, installDelayAddWk: 0 },
+};
+const VENDOR_INSTALL = {
+  'AV Integrator': { addWk: 1, risk: 2 }, 'Foodservice Integrator': { addWk: 1, risk: 2 },
+  'Cafe Fit-Out Vendor': { addWk: 1, risk: 2 }, 'Retail Fixture Vendor': { addWk: 0, risk: 1 },
+  'Fitness OEM': { addWk: 1, risk: 3 }, 'Wellness OEM': { addWk: 1, risk: 4 },
+  'Respiratory / training OEM': { addWk: 2, risk: 5 }, 'Vet OEM': { addWk: 1, risk: 3 },
+  'Vet Rehab OEM': { addWk: 2, risk: 5 }, 'Vet Wellness OEM': { addWk: 1, risk: 4 },
+  'Workstation Integrator': { addWk: 1, risk: 2 }, 'Smart Appliance OEM': { addWk: 1, risk: 2 },
+  'Container/Modular Vendor': { addWk: 2, risk: 6 }, 'Modular Med Fit-Out': { addWk: 2, risk: 6 },
+  'Medical OEM': { addWk: 2, risk: 7 }, 'Medical / wellness OEM': { addWk: 2, risk: 7 },
+  'Medical furniture OEM': { addWk: 1, risk: 3 },
+};
+
+// Revenue config: type Fixed -> {lean,base,premium}; type Capacity -> price/util tiers + capacityUnitsPerDay
+// Capacity drivers: [module, lean qty, base qty, premium qty, units/day/unit]
+const CAPACITY_DRIVERS = [
+  ['Clinic', 1, 2, 3, 6],   // HBOT chambers
+  ['Clinic', 1, 2, 3, 8],   // IHHT stations
+  ['Clinic', 1, 3, 4, 6],   // IV chairs
+  ['Gym', 1, 2, 3, 12],     // Smart bikes
+  ['Gym', 1, 2, 3, 10],     // EWOT / hypoxic stations
+  ['Pets', 2, 2, 3, 8],     // Exam room sets
+  ['Pets', 1, 1, 1, 8],     // Hydro / rehab lane
+  ['Containers', 2, 2, 2, 6], // Container modules
+];
+function capacityUnitsPerDay(mod, tierKey) {
+  const tierIdx = { Lean: 0, Base: 1, Premium: 2 }[tierKey];
+  return CAPACITY_DRIVERS.filter(d => d[0] === mod).reduce((sum, d) => sum + d[1 + tierIdx] * d[4], 0);
+}
+const REVENUE_CONFIG = {
+  PublicCore: { type: 'Fixed', lean: 8000, base: 15000, premium: 25000, ramp: 3 },
+  Kitchen:    { type: 'Fixed', lean: 10000, base: 18000, premium: 30000, ramp: 2 },
+  Cafe:       { type: 'Fixed', lean: 12000, base: 20000, premium: 32000, ramp: 2 },
+  Store:      { type: 'Fixed', lean: 10000, base: 18000, premium: 28000, ramp: 2 },
+  Gym:        { type: 'Capacity', priceLean: 35, priceBase: 45, pricePremium: 60, utilLean: 0.3, utilBase: 0.45, utilPremium: 0.6, workingDays: 26, ramp: 4 },
+  Pets:       { type: 'Capacity', priceLean: 55, priceBase: 70, pricePremium: 90, utilLean: 0.25, utilBase: 0.4, utilPremium: 0.55, workingDays: 26, ramp: 4 },
+  Apartment:  { type: 'Fixed', lean: 5000, base: 10000, premium: 18000, ramp: 3 },
+  Containers: { type: 'Fixed', lean: 8000, base: 16000, premium: 25000, ramp: 3 },
+  Clinic:     { type: 'Capacity', priceLean: 250, priceBase: 350, pricePremium: 500, utilLean: 0.2, utilBase: 0.35, utilPremium: 0.5, workingDays: 26, ramp: 5 },
+};
+
+const REVENUE_GEO_MULT = {
+  PublicCore: { Dubai: 1, Turkey: 0.65, Geneva: 1.15, Palma: 0.85, 'UAE Other': 0.9, None: 1 },
+  Kitchen:    { Dubai: 1, Turkey: 0.7,  Geneva: 1.1,  Palma: 0.9,  'UAE Other': 0.9, None: 1 },
+  Cafe:       { Dubai: 1, Turkey: 0.7,  Geneva: 1.2,  Palma: 0.95, 'UAE Other': 0.88, None: 1 },
+  Store:      { Dubai: 1, Turkey: 0.72, Geneva: 1.18, Palma: 0.92, 'UAE Other': 0.9, None: 1 },
+  Gym:        { Dubai: 1, Turkey: 0.68, Geneva: 1.12, Palma: 0.82, 'UAE Other': 0.9, None: 1 },
+  Pets:       { Dubai: 1, Turkey: 0.62, Geneva: 1.08, Palma: 0.78, 'UAE Other': 0.88, None: 1 },
+  Apartment:  { Dubai: 1, Turkey: 0.75, Geneva: 1.15, Palma: 0.95, 'UAE Other': 0.92, None: 1 },
+  Containers: { Dubai: 1, Turkey: 0.8,  Geneva: 1.05, Palma: 0.9,  'UAE Other': 0.95, None: 1 },
+  Clinic:     { Dubai: 1, Turkey: 0.7,  Geneva: 1.2,  Palma: 0.82, 'UAE Other': 0.9, None: 1 },
+};
+
+const TRANSFER_REFIT_PCT = {
+  PublicCore: 0.15, Kitchen: 0.1, Cafe: 0.1, Store: 0.08, Gym: 0.18, Pets: 0.2, Apartment: 0.12, Containers: 0.08, Clinic: 0.25,
+};
+const TRANSFER_REINSTALL_PCT = {
+  PublicCore: 0.05, Kitchen: 0.03, Cafe: 0.03, Store: 0.02, Gym: 0.07, Pets: 0.06, Apartment: 0.03, Containers: 0.04, Clinic: 0.08,
+};
+const TRANSFER_MOVE_COST = {
+  PublicCore: 20000, Kitchen: 8000, Cafe: 8000, Store: 5000, Gym: 35000,
+  Pets: 30000, Apartment: 10000, Containers: 12000, Clinic: 60000,
+};
+const TRANSFER_DOWNTIME = { PublicCore: 1, Kitchen: 1, Cafe: 1, Store: 1, Gym: 1, Pets: 2, Apartment: 1, Containers: 0, Clinic: 3 };
+const TRANSFER_RELICENSE = { PublicCore: 0, Kitchen: 0, Cafe: 0, Store: 0, Gym: 1, Pets: 1, Apartment: 0, Containers: 0, Clinic: 2 };
+
+const PATHWAYS = {
+  'Dubai Direct Flagship':              { activation: 'Full launch',        opening: 'Full four-floor flagship', primaryGeo: 'Dubai', interimGeo: 'None',  transferMonth: 0 },
+  'Dubai Public-Floor-First':           { activation: 'Public floor first', opening: 'Full four-floor flagship', primaryGeo: 'Dubai', interimGeo: 'None',  transferMonth: 0 },
+  'Dubai Gym-First':                    { activation: 'Gym first',          opening: 'Full four-floor flagship', primaryGeo: 'Dubai', interimGeo: 'None',  transferMonth: 0 },
+  'UAE Pilot → Dubai Flagship':         { activation: 'Gym first',          opening: 'Gym + Public only',        primaryGeo: 'Dubai', interimGeo: 'UAE Other', transferMonth: 9 },
+  'Turkey Bridge → Dubai Flagship':     { activation: 'Showcase first',     opening: 'Showcase / pets pilot',    primaryGeo: 'Dubai', interimGeo: 'Turkey', transferMonth: 8 },
+  'Geneva Bridge → Dubai Flagship':     { activation: 'Clinic first',       opening: 'Clinic + Gym only',        primaryGeo: 'Dubai', interimGeo: 'Geneva', transferMonth: 10 },
+  'Palma Wellness Showroom → Dubai':    { activation: 'Showcase first',     opening: 'Showcase / pets pilot',    primaryGeo: 'Dubai', interimGeo: 'Palma',  transferMonth: 9 },
+  'Dubai Staged: Public+Gym → Clinic':  { activation: 'Public + Gym first, Clinic later', opening: 'Public + Gym + Clinic', primaryGeo: 'Dubai', interimGeo: 'None', transferMonth: 6 },
+};
+
+// pathway -> module -> {geoMode: 'Primary'|'Interim', startOffset}
+const PATHWAY_MODULE_MAP = {
+  'Dubai Direct Flagship': obj(['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',0]),
+  'Dubai Public-Floor-First': obj(['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',2],['Primary',4],['Primary',4],['Primary',4],['Primary',4]),
+  'Dubai Gym-First': obj(['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',0],['Primary',3],['Primary',3],['Primary',3],['Primary',3]),
+  'UAE Pilot → Dubai Flagship': obj(['Primary',9],['Primary',9],['Primary',9],['Primary',9],['Interim',0],['Interim',0],['Interim',0],['Interim',0],['Primary',9]),
+  'Turkey Bridge → Dubai Flagship': obj(['Primary',8],['Primary',8],['Primary',8],['Primary',8],['Interim',0],['Interim',0],['Interim',0],['Interim',0],['Primary',8]),
+  'Geneva Bridge → Dubai Flagship': obj(['Primary',10],['Primary',10],['Primary',10],['Primary',10],['Interim',0],['Primary',10],['Primary',10],['Primary',10],['Interim',0]),
+  'Palma Wellness Showroom → Dubai': obj(['Primary',9],['Primary',9],['Primary',9],['Primary',9],['Interim',0],['Interim',0],['Interim',0],['Interim',0],['Primary',9]),
+  'Dubai Staged: Public+Gym → Clinic': obj(['Primary',6],['Primary',6],['Primary',6],['Primary',6],['Primary',6],['Primary',6],['Primary',6],['Primary',6],['Primary',6]),
+};
+function obj(...vals) {
+  const r = {};
+  MODULES.forEach((m, i) => { r[m] = { geoMode: vals[i][0], startOffset: vals[i][1] }; });
+  return r;
+}
+
+// Activation sequence offsets (months) by sequence name, per module
+const ACTIVATION_SEQUENCE = {
+  'Full launch':                         { PublicCore:0, Kitchen:0, Cafe:0, Store:0, Gym:0, Pets:0, Apartment:0, Containers:0, Clinic:0 },
+  'Public floor first':                  { PublicCore:0, Kitchen:0, Cafe:0, Store:0, Gym:2, Pets:3, Apartment:3, Containers:3, Clinic:5 },
+  'Gym first':                           { PublicCore:1, Kitchen:2, Cafe:2, Store:2, Gym:0, Pets:3, Apartment:3, Containers:3, Clinic:5 },
+  'Clinic first':                        { PublicCore:2, Kitchen:2, Cafe:2, Store:2, Gym:3, Pets:4, Apartment:4, Containers:4, Clinic:0 },
+  'Public + Gym first, Clinic later':    { PublicCore:0, Kitchen:0, Cafe:0, Store:0, Gym:0, Pets:3, Apartment:3, Containers:3, Clinic:5 },
+  'Staggered by licensing readiness':    { PublicCore:0, Kitchen:1, Cafe:1, Store:1, Gym:1, Pets:2, Apartment:2, Containers:2, Clinic:4 },
+  'Showcase first':                      { PublicCore:2, Kitchen:2, Cafe:2, Store:2, Gym:3, Pets:0, Apartment:0, Containers:0, Clinic:5 },
+};
+const OPENING_CONFIG = {
+  'Full four-floor flagship':  { PublicCore:1, Kitchen:1, Cafe:1, Store:1, Gym:1, Pets:1, Apartment:1, Containers:1, Clinic:1 },
+  'Clinic + Gym only':         { PublicCore:0, Kitchen:0, Cafe:0, Store:0, Gym:1, Pets:0, Apartment:0, Containers:0, Clinic:1 },
+  'Public + Gym + Clinic':     { PublicCore:1, Kitchen:1, Cafe:1, Store:1, Gym:1, Pets:0, Apartment:0, Containers:0, Clinic:1 },
+  'Public floor only pilot':   { PublicCore:1, Kitchen:1, Cafe:1, Store:1, Gym:0, Pets:0, Apartment:0, Containers:0, Clinic:0 },
+  'Clinic first medical core': { PublicCore:0, Kitchen:0, Cafe:0, Store:0, Gym:0, Pets:0, Apartment:0, Containers:0, Clinic:1 },
+  'Showcase / pets pilot':     { PublicCore:0, Kitchen:0, Cafe:0, Store:0, Gym:0, Pets:1, Apartment:1, Containers:1, Clinic:0 },
+  'Gym + Public only':         { PublicCore:1, Kitchen:1, Cafe:1, Store:1, Gym:1, Pets:0, Apartment:0, Containers:0, Clinic:0 },
+};
+
+const REPLICATION_STATIC = {
+  PublicCore: { replicable:false },
+  Kitchen:    { replicable:false },
+  Cafe:       { replicable:false },
+  Store:      { replicable:true, format:'Retail Corner', fee:10000, royaltyPct:0.03, supportPct:0.01, launchLag:4 },
+  Gym:        { replicable:true, format:'Performance Studio', fee:45000, royaltyPct:0.06, supportPct:0.02, launchLag:6 },
+  Pets:       { replicable:true, format:'Vet Longevity Clinic', fee:50000, royaltyPct:0.06, supportPct:0.025, launchLag:7 },
+  Apartment:  { replicable:true, format:'Showroom / Experience Suite', fee:25000, royaltyPct:0.04, supportPct:0.015, launchLag:5 },
+  Containers: { replicable:true, format:'Modular Pod', fee:35000, royaltyPct:0.05, supportPct:0.02, launchLag:4 },
+  Clinic:     { replicable:true, format:'Medical Longevity Clinic', fee:75000, royaltyPct:0.07, supportPct:0.03, launchLag:9 },
+};
+
+if (typeof module !== 'undefined') { module.exports = {
+  MODULES, RENT_BENCHMARKS, GEOGRAPHY, RISK_MULTIPLIER, LICENSE_DELAY_MODE, MODEL_LAYER_MULTIPLIER,
+  DEPENDENCY_MULTIPLIER, PROCUREMENT_POSTURE, MODULE_BASE, LICENSING_BENCHMARKS, DEPENDENCIES,
+  MODULE_COMPLEXITY, FITOUT_BENCHMARKS, FITOUT_OPEX_FIXED, STAFFING_BENCHMARKS_AED, STAFFING_ROLES,
+  PROCUREMENT_LINES, CUSTOMS_INSTALL_GEO, VENDOR_INSTALL, REVENUE_CONFIG, REVENUE_GEO_MULT,
+  TRANSFER_MOVE_COST, TRANSFER_DOWNTIME, TRANSFER_RELICENSE, TRANSFER_REFIT_PCT, TRANSFER_REINSTALL_PCT, PATHWAYS, PATHWAY_MODULE_MAP,
+  ACTIVATION_SEQUENCE, OPENING_CONFIG, REPLICATION_STATIC, CAPACITY_DRIVERS, capacityUnitsPerDay,
+}; }
+
+</script>
+<script>
+// ============================================================
+// Longevity AMS — Native calculation engine (computation layer)
+// ============================================================
+
+const PREOPEN_RAMP_PCT = {
+  PublicCore: 0.4, Kitchen: 0.4, Cafe: 0.4, Store: 0.4, Gym: 0.5, Pets: 0.5, Apartment: 0.5, Containers: 0.5, Clinic: 0.6,
+};
+
+function resolvePathway(inputs) {
+  const pw = PATHWAYS[inputs.pathway];
+  if (inputs.pathwayMode === 'Follow Pathway') {
+    return {
+      activationSeq: pw.activation,
+      openingConfig: pw.opening,
+      primaryGeo: pw.primaryGeo,
+      interimGeo: pw.interimGeo,
+      transferMonth: pw.transferMonth,
+    };
+  }
+  return {
+    activationSeq: inputs.activationSeq,
+    openingConfig: inputs.openingConfig,
+    primaryGeo: inputs.primaryGeoManual,
+    interimGeo: inputs.interimGeoManual,
+    transferMonth: 0,
+  };
+}
+
+function computeFacilityModel(inputs, resolved) {
+  const rentUsdPerM2 = RENT_BENCHMARKS[inputs.rentBenchmark].usdPerM2;
+  const licenseDelayMode = LICENSE_DELAY_MODE[inputs.riskMode];
+  const modelLayerMult = MODEL_LAYER_MULTIPLIER[inputs.modelLayer];
+  const procLeadMult = PROCUREMENT_POSTURE[inputs.procurementPosture].leadMult;
+
+  const facility = {};
+  MODULES.forEach(mod => {
+    const base = MODULE_BASE[mod];
+    const defaultIncluded = (OPENING_CONFIG[resolved.openingConfig][mod] === 1) ? 1 : 0;
+    const includeOverride = inputs.overrides && inputs.overrides.included ? inputs.overrides.included[mod] : null;
+    const included = includeOverride != null ? (includeOverride ? 1 : 0) : defaultIncluded;
+    const activeArea = included ? base.area : 0;
+    const seqOffset = ACTIVATION_SEQUENCE[resolved.activationSeq][mod];
+
+    const pmEntry = PATHWAY_MODULE_MAP[inputs.pathway] ? PATHWAY_MODULE_MAP[inputs.pathway][mod] : { geoMode: 'Primary', startOffset: 0 };
+    const pathStartOffset = (inputs.pathwayMode === 'Follow Pathway') ? pmEntry.startOffset : 0;
+    const geoMode = (inputs.pathwayMode === 'Follow Pathway') ? pmEntry.geoMode : 'Primary';
+    const resolvedGeo = (geoMode === 'Interim') ? resolved.interimGeo : resolved.primaryGeo;
+    const geo = GEOGRAPHY[resolvedGeo];
+
+    const depDelayBase = DEPENDENCIES[mod];
+    // AMS_DEPENDENCIES!F = ROUNDUP(base * dependencyMult * modelLayerMult, 0) -- rounded at this stage
+    const selectedDependencyDelay = Math.ceil(depDelayBase * DEPENDENCY_MULTIPLIER[inputs.dependencyMode] * modelLayerMult);
+    // AMS_FACILITY_MODEL!AA = selectedDependencyDelay * (1 + complexity/20) -- not yet rounded
+    const depDelayAdj = selectedDependencyDelay * (1 + MODULE_COMPLEXITY[mod] / 20);
+
+    const leaseStart = included ? (seqOffset + pathStartOffset) : null;
+    const fitoutStart = leaseStart;
+    const fitoutMonths = base.fitoutMonths;
+    const procLead = Math.ceil(base.baseProcLead * procLeadMult);
+    const baseLicenseDelay = LICENSING_BENCHMARKS[mod][licenseDelayMode];
+    const adjustedLicenseDelay = Math.ceil((baseLicenseDelay + depDelayAdj) * geo.license * modelLayerMult);
+
+    const fitoutTerm = fitoutStart + fitoutMonths;
+    const procTerm = leaseStart + procLead;
+    const licenseTerm = leaseStart + adjustedLicenseDelay;
+    const bindingTerm = Math.max(fitoutTerm, procTerm, licenseTerm);
+    let bindingReason = 'Fit-out';
+    if (bindingTerm === licenseTerm) bindingReason = 'Licensing & approvals';
+    else if (bindingTerm === procTerm) bindingReason = 'Equipment lead time';
+
+    let plannedOpenMonth = null;
+    if (inputs.overrides && inputs.overrides.openMonth && inputs.overrides.openMonth[mod] != null) {
+      plannedOpenMonth = inputs.overrides.openMonth[mod];
+    } else if (included) {
+      plannedOpenMonth = bindingTerm + 1;
+    }
+
+    let annualRent;
+    if (inputs.overrides && inputs.overrides.monthlyRent && inputs.overrides.monthlyRent[mod] != null) {
+      annualRent = inputs.overrides.monthlyRent[mod] * 12;
+    } else {
+      annualRent = Math.round(activeArea * rentUsdPerM2 * geo.rent);
+    }
+    const monthlyRent = Math.round(annualRent / 12);
+
+    const interimGeoRentMult = GEOGRAPHY[resolved.interimGeo].rent;
+    const monthlyOpex = FITOUT_OPEX_FIXED[mod] * interimGeoRentMult; // replicates a real quirk in the audited model: OPEX scales with the interim geo's RENT multiplier applied to every module, not each module's own fitout multiplier
+    facility[mod] = {
+      included, activeArea, leaseStart, fitoutStart, fitoutMonths, procLead,
+      adjustedLicenseDelay, baseLicenseDelay, dependencyDelay: depDelayAdj, bindingReason,
+      plannedOpenMonth, monthlyRent, monthlyOpex,
+      resolvedGeo, geoMode, fitoutMult: geo.fitout,
+    };
+  });
+  return facility;
+}
+
+function computeStaffing(inputs, facility) {
+  const fx = inputs.fxRate;
+  const tierIdx = { Lean: 0, Base: 1, Premium: 2 }[inputs.scenarioTier];
+  const modulePayroll = {};
+  MODULES.forEach(m => modulePayroll[m] = 0);
+
+  STAFFING_ROLES.forEach(([role, mod, lean, base, premium]) => {
+    const qtyTiers = [lean, base, premium];
+    let qty;
+    if (inputs.overrides && inputs.overrides.staffQty && inputs.overrides.staffQty[role] != null) {
+      qty = inputs.overrides.staffQty[role];
+    } else {
+      qty = qtyTiers[tierIdx];
+    }
+    const salaryAedPerMonth = STAFFING_BENCHMARKS_AED[role];
+    const costUsdBase = salaryAedPerMonth / fx; // Block 2 fix: AED -> USD
+    const staffMult = GEOGRAPHY[facility[mod].resolvedGeo].staff;
+    const geoAdjustedCost = costUsdBase * staffMult;
+    modulePayroll[mod] += qty * geoAdjustedCost;
+  });
+  return modulePayroll;
+}
+
+function computeProcurement(inputs, facility) {
+  const tierIdx = { Lean: 0, Base: 1, Premium: 2 }[inputs.scenarioTier];
+  const posture = PROCUREMENT_POSTURE[inputs.procurementPosture];
+  const lines = [];
+
+  PROCUREMENT_LINES.forEach(([mod, equip, vendor, leanQ, baseQ, premQ, unitCostBase, leadBaseWk, shipPct, customsPct, installLagBase, annualServicePct]) => {
+    const qtyTiers = [leanQ, baseQ, premQ];
+    let qty;
+    if (inputs.overrides && inputs.overrides.procQty && inputs.overrides.procQty[equip] != null) {
+      qty = inputs.overrides.procQty[equip];
+    } else {
+      qty = qtyTiers[tierIdx];
+    }
+    const selectedUnitCost = unitCostBase * posture.costMult;
+    const geo = facility[mod].resolvedGeo;
+    const ci = CUSTOMS_INSTALL_GEO[geo];
+    const vi = VENDOR_INSTALL[vendor] || { addWk: 1, risk: 3 };
+
+    const shippingPct = shipPct * ci.shipMult;
+    const customsTotalPct = customsPct + ci.customsAdd;
+    const landedUnitCost = selectedUnitCost * (1 + shippingPct + customsTotalPct);
+    const subtotal = qty * landedUnitCost;
+
+    const selectedLead = Math.ceil(leadBaseWk * posture.leadMult + ci.customsDelayWk);
+    const orderStartMo = facility[mod].leaseStart;
+    const arrivalMo = (orderStartMo == null) ? null : orderStartMo + Math.ceil(selectedLead / 4);
+    const installLagMo = installLagBase + Math.ceil(vi.addWk / 4);
+    const readyMo = (arrivalMo == null) ? null : arrivalMo + installLagMo;
+
+    lines.push({ mod, equip, qty, subtotal, orderStartMo, arrivalMo, readyMo });
+  });
+  return lines;
+}
+
+function computeRevenue(inputs, facility, resolved) {
+  const tierKey = inputs.scenarioTier;
+  const revenue = {};
+  MODULES.forEach(mod => {
+    const cfg = REVENUE_CONFIG[mod];
+    const ownGeo = facility[mod].resolvedGeo;
+    const ownGeoMult = REVENUE_GEO_MULT[mod][ownGeo];
+    let steadyRevenue;
+    if (cfg.type === 'Fixed') {
+      const tierVal = { Lean: cfg.lean, Base: cfg.base, Premium: cfg.premium }[tierKey];
+      steadyRevenue = tierVal * ownGeoMult;
+    } else {
+      const price = { Lean: cfg.priceLean, Base: cfg.priceBase, Premium: cfg.pricePremium }[tierKey];
+      const util = { Lean: cfg.utilLean, Base: cfg.utilBase, Premium: cfg.utilPremium }[tierKey];
+      const units = capacityUnitsPerDay(mod, tierKey);
+      steadyRevenue = units * price * util * cfg.workingDays * ownGeoMult;
+    }
+    // Z (interim-equivalent) and AA (primary-equivalent): rescale steadyRevenue from the module's
+    // OWN resolved geo multiplier to the GLOBAL interim/primary geo multiplier (real model behavior)
+    const globalInterimMult = REVENUE_GEO_MULT[mod][resolved.interimGeo];
+    const globalPrimaryMult = REVENUE_GEO_MULT[mod][resolved.primaryGeo];
+    const interimEquivRevenue = (ownGeoMult === 0) ? steadyRevenue : steadyRevenue / ownGeoMult * globalInterimMult;
+    const primaryEquivRevenue = (ownGeoMult === 0) ? steadyRevenue : steadyRevenue / ownGeoMult * globalPrimaryMult;
+
+    const f = facility[mod];
+    const transferApplicable = (f.included === 1 && f.geoMode === 'Interim' && resolved.transferMonth > 0);
+    const transferEventMonth = transferApplicable ? resolved.transferMonth : null;
+    const resumeMonth = transferApplicable
+      ? Math.max(f.plannedOpenMonth, resolved.transferMonth + TRANSFER_DOWNTIME[mod] + TRANSFER_RELICENSE[mod])
+      : f.plannedOpenMonth;
+
+    revenue[mod] = {
+      steadyRevenue, ramp: cfg.ramp, transferApplicable, transferEventMonth, resumeMonth,
+      interimEquivRevenue, primaryEquivRevenue,
+    };
+  });
+  return revenue;
+}
+
+function rampFrac(m, startMonth, rampMonths) {
+  if (startMonth == null) return 0;
+  return Math.min(1, Math.max(0, (m - startMonth + 1) / Math.max(1, rampMonths)));
+}
+
+function revenueAtMonth(mod, m, facility, revenue) {
+  const f = facility[mod];
+  const r = revenue[mod];
+  if (f.plannedOpenMonth == null || m < f.plannedOpenMonth) return 0;
+  if (!r.transferApplicable) {
+    return r.steadyRevenue * rampFrac(m, f.plannedOpenMonth, r.ramp);
+  }
+  if (m < r.transferEventMonth) {
+    return r.interimEquivRevenue * rampFrac(m, f.plannedOpenMonth, r.ramp);
+  }
+  if (m < r.resumeMonth) return 0;
+  return r.primaryEquivRevenue * rampFrac(m, r.resumeMonth, r.ramp);
+}
+
+function computeReplication(inputs, revenue) {
+  const sites = inputs.followOnSites || 0;
+  const rows = [];
+  let totalCapex = 0, totalMargin = 0;
+  MODULES.forEach(mod => {
+    const rep = REPLICATION_STATIC[mod];
+    if (!rep.replicable) return;
+    const primaryRevenue = revenue[mod].steadyRevenue;
+    const fitoutBudget = MODULE_BASE[mod].area * FITOUT_BENCHMARKS[mod].Base; // base tier franchise build-out
+    const equipCapex = PROCUREMENT_LINES.filter(l => l[0] === mod).reduce((sum, l) => sum + l[4] * l[6], 0); // base qty * unit cost base
+    const capex = fitoutBudget + equipCapex;
+    const opex = FITOUT_OPEX_FIXED[mod];
+    const royalty = primaryRevenue * rep.royaltyPct;
+    const netProfit = primaryRevenue - royalty - opex;
+    const payback = netProfit > 0 ? capex / netProfit : null;
+    const supportCost = primaryRevenue * rep.supportPct;
+    const parentMargin = royalty - supportCost;
+    rows.push({ module: mod, format: rep.format, capex, netProfit, payback, royalty, parentMargin });
+    totalCapex += capex * sites;
+    totalMargin += parentMargin * sites;
+  });
+  return { rows, totalCapex, totalMargin };
+}
+
+function computeFinModel(inputs, facility, staffing, procurementLines, revenue) {
+  const months = Array.from({ length: 36 }, (_, i) => i); // real model's month axis starts at 0 (AMS_FIN_MODEL!C4=0)
+  const utilitiesPct = { Lean: 0.12, Base: 0.15, Premium: 0.18 }[inputs.scenarioTier];
+  const sharedOverhead = { Lean: 75000 + 30000, Base: 100000 + 50000, Premium: 150000 + 80000 }[inputs.scenarioTier] / 1; // one-time, applied month 1 only below
+
+  let cumulativeBurn = 0, cumulativeNetCash = 0, cumulativeTransferCost = 0;
+  let breakevenMonth = null;
+  let firstRevenueMonth = null;
+  const monthly = [];
+
+  // Pre-compute per-module transfer cost (paid once, at the transfer event month)
+  const procurementByModule = {};
+  MODULES.forEach(mod => { procurementByModule[mod] = 0; });
+  procurementLines.forEach(line => { procurementByModule[line.mod] += line.subtotal; });
+
+  const transferCostByModule = {};
+  MODULES.forEach(mod => {
+    const r = revenue[mod];
+    if (!r.transferApplicable) { transferCostByModule[mod] = 0; return; }
+    const f = facility[mod];
+    const fitoutBudget = f.activeArea * f.fitoutMult * FITOUT_BENCHMARKS[mod][inputs.scenarioTier];
+    const cost = TRANSFER_MOVE_COST[mod] + TRANSFER_REFIT_PCT[mod] * fitoutBudget + TRANSFER_REINSTALL_PCT[mod] * procurementByModule[mod];
+    transferCostByModule[mod] = Math.round(cost);
+  });
+
+  months.forEach(m => {
+    let rentBurn = 0, moduleOpex = 0, fitoutSpend = 0, procurementSpend = 0, prePayroll = 0, opPayroll = 0, revenueTotal = 0;
+
+    MODULES.forEach(mod => {
+      const f = facility[mod];
+      if (!f.included) return;
+      const leaseActive = (f.leaseStart != null && m >= f.leaseStart) ? 1 : 0;
+      const openActive = (f.plannedOpenMonth != null && m >= f.plannedOpenMonth) ? 1 : 0;
+
+      if (leaseActive) {
+        rentBurn += f.monthlyRent;
+      }
+      // Fit-out spend: spread evenly across fitout window (Block 2 fix: blank-safe via included check above)
+      if (f.fitoutStart != null && m >= f.fitoutStart && m < f.fitoutStart + f.fitoutMonths) {
+        const fitoutBudget = f.activeArea * f.fitoutMult * FITOUT_BENCHMARKS[mod][inputs.scenarioTier];
+        fitoutSpend += fitoutBudget / Math.max(1, f.fitoutMonths);
+      }
+      if (leaseActive && !openActive) {
+        prePayroll += staffing[mod] * PREOPEN_RAMP_PCT[mod];
+      }
+      if (openActive) {
+        opPayroll += staffing[mod];
+        moduleOpex += f.monthlyOpex;
+        const monthRevenue = revenueAtMonth(mod, m, facility, revenue);
+        revenueTotal += monthRevenue;
+        if (monthRevenue > 0 && firstRevenueMonth == null) firstRevenueMonth = m;
+      }
+    });
+
+    procurementLines.forEach(line => {
+      if (line.orderStartMo === m) procurementSpend += line.subtotal * 0.7;
+      if (line.arrivalMo === m) procurementSpend += line.subtotal * 0.3;
+    });
+
+    const utilities = rentBurn * utilitiesPct;
+    const overheadThisMonth = (m === 0) ? sharedOverhead : 0;
+    let transferCost = 0;
+    MODULES.forEach(mod => {
+      const r = revenue[mod];
+      if (r.transferApplicable && r.transferEventMonth === m) transferCost += transferCostByModule[mod];
+    });
+    cumulativeTransferCost += transferCost;
+    const totalCashOut = rentBurn + utilities + fitoutSpend + procurementSpend + prePayroll + opPayroll + moduleOpex + overheadThisMonth;
+
+    cumulativeBurn += totalCashOut;
+    const netCashFlow = revenueTotal - totalCashOut - transferCost;
+    cumulativeNetCash += netCashFlow;
+    if (breakevenMonth == null && cumulativeNetCash >= 0) breakevenMonth = m;
+
+    monthly.push({ month: m, rentBurn, utilities, fitoutSpend, procurementSpend, prePayroll, opPayroll, moduleOpex, totalCashOut, revenueTotal, netCashFlow, cumulativeNetCash, cumulativeBurn });
+  });
+
+  return { monthly, cumulativeBurn, cumulativeNetCash, breakevenMonth, firstRevenueMonth, totalTransferCost: cumulativeTransferCost };
+}
+
+function runEngine(inputs) {
+  const resolved = resolvePathway(inputs);
+  const facility = computeFacilityModel(inputs, resolved);
+  const staffing = computeStaffing(inputs, facility);
+  const procurementLines = computeProcurement(inputs, facility);
+  const revenue = computeRevenue(inputs, facility, resolved);
+  const fin = computeFinModel(inputs, facility, staffing, procurementLines, revenue);
+  const replication = computeReplication(inputs, revenue);
+
+  const steadyMonthlyRevenue = MODULES.reduce((sum, m) => sum + (facility[m].included ? revenue[m].primaryEquivRevenue : 0), 0);
+  const recurringPct = { PublicCore: 0.30, Kitchen: 0.20, Cafe: 0.10, Store: 0.15, Gym: 0.70, Pets: 0.40, Apartment: 0.20, Containers: 0.10, Clinic: 0.55 };
+  let recurringRevenue = 0;
+  MODULES.forEach(m => { if (facility[m].included) recurringRevenue += revenue[m].primaryEquivRevenue * recurringPct[m]; });
+
+  return {
+    facility, staffing, procurementLines, revenue, fin, replication,
+    netCash36M: fin.cumulativeNetCash,
+    burn36M: fin.cumulativeBurn,
+    breakevenMonth: fin.breakevenMonth,
+    firstRevenueMonth: fin.firstRevenueMonth,
+    totalTransferCost: fin.totalTransferCost,
+    steadyMonthlyRevenue,
+    recurringPctOfRevenue: steadyMonthlyRevenue > 0 ? recurringRevenue / steadyMonthlyRevenue : 0,
+  };
+}
+
+function defaultInputs() {
+  return {
+    scenarioTier: 'Base',
+    riskMode: 'Optimistic',
+    rentBenchmark: 'Dubai Mixed-Use Base',
+    procurementPosture: 'Fastest-available',
+    modelLayer: 'Simplified',
+    dependencyMode: 'Base',
+    fxRate: 3.6725,
+    pathway: 'Dubai Direct Flagship',
+    pathwayMode: 'Follow Pathway',
+    activationSeq: 'Full launch',
+    openingConfig: 'Full four-floor flagship',
+    primaryGeoManual: 'Dubai',
+    interimGeoManual: 'None',
+    followOnSites: 1,
+    overrides: { staffQty: {}, procQty: {}, monthlyRent: {}, openMonth: {}, included: {} },
+  };
+}
+
+if (typeof module !== 'undefined') {
+  module.exports = Object.assign(module.exports || {}, {
+    resolvePathway, computeFacilityModel, computeStaffing, computeProcurement,
+    computeRevenue, computeReplication, computeFinModel, runEngine, defaultInputs,
+    revenueAtMonth, rampFrac,
+  });
+}
+
+</script>
+<script>
+
+
+function fmtUSD(n) {
+  if (n == null || isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  if (abs >= 1000000) return sign + '$' + (abs/1000000).toFixed(2) + 'M';
+  return sign + '$' + Math.round(abs).toLocaleString();
+}
+function confColor(c) {
+  if (c >= 8) return '#5BA8D1';
+  if (c >= 6) return '#E0B05B';
+  return '#D9714A';
+}
+
+let state = defaultInputs();
+let pinnedScenario = null;
+let selectedModule = 'Clinic';
+
+function renderCashChart(result, targetId) {
+  const box = document.getElementById(targetId || 'cashChartBox');
+  const data = result.fin.monthly.map(m => m.cumulativeNetCash);
+  const w = 960, h = 220, padL = 70, padR = 20, padT = 16, padB = 28;
+  const innerW = w - padL - padR, innerH = h - padT - padB;
+  const minV = Math.min(0, ...data), maxV = Math.max(0, ...data);
+  const range = (maxV - minV) || 1;
+  const x = i => padL + (i / (data.length - 1)) * innerW;
+  const y = v => padT + innerH - ((v - minV) / range) * innerH;
+  const zeroY = y(0);
+
+  const linePoints = data.map((v, i) => `${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const areaPoints = `${x(0).toFixed(1)},${zeroY.toFixed(1)} ` + linePoints + ` ${x(data.length-1).toFixed(1)},${zeroY.toFixed(1)}`;
+
+  const breakevenIdx = result.breakevenMonth != null ? result.breakevenMonth : null;
+  const breakevenX = breakevenIdx != null ? x(breakevenIdx) : null;
+
+  const yTicks = [minV, minV + range / 2, maxV];
+  const yLabels = yTicks.map(v => `<text x="${padL - 10}" y="${y(v).toFixed(1)}" text-anchor="end" dominant-baseline="middle" font-size="10" fill="#87A2B0">${fmtUSD(v)}</text>`).join('');
+  const xLabels = [0, 6, 12, 18, 24, 30, 35].map(i => `<text x="${x(i).toFixed(1)}" y="${h - 8}" text-anchor="middle" font-size="10" fill="#87A2B0">M${i}</text>`).join('');
+
+  box.innerHTML = `
+    <svg viewBox="0 0 ${w} ${h}" width="100%" style="overflow:visible;">
+      <line x1="${padL}" y1="${zeroY.toFixed(1)}" x2="${w-padR}" y2="${zeroY.toFixed(1)}" stroke="#DCEBF2" stroke-width="1" stroke-dasharray="3,3"/>
+      ${breakevenX != null ? `<line x1="${breakevenX.toFixed(1)}" y1="${padT}" x2="${breakevenX.toFixed(1)}" y2="${h-padB}" stroke="#5BA8D1" stroke-width="1" stroke-dasharray="2,2"/>` : ''}
+      <polygon points="${areaPoints}" fill="#5BA8D1" opacity="0.12"/>
+      <polyline points="${linePoints}" fill="none" stroke="#2E6B91" stroke-width="2"/>
+      ${yLabels}
+      ${xLabels}
+      ${breakevenX != null ? `<text x="${breakevenX.toFixed(1)}" y="${padT+10}" text-anchor="middle" font-size="10" fill="#5BA8D1" font-weight="600">Breakeven</text>` : ''}
+    </svg>
+  `;
+}
+
+function renderCostBreakdownChart(result) {
+  const box = document.getElementById('costChartBox');
+  const data = result.fin.monthly.map(m => ({
+    rent: m.rentBurn + m.utilities,
+    payroll: m.prePayroll + m.opPayroll,
+    opex: m.moduleOpex,
+    buildout: m.fitoutSpend + m.procurementSpend,
+  }));
+  const w = 960, h = 240, padL = 70, padR = 20, padT = 16, padB = 40;
+  const innerW = w - padL - padR, innerH = h - padT - padB;
+  const maxTotal = Math.max(...data.map(d => d.rent + d.payroll + d.opex + d.buildout), 1);
+  const gap = innerW / data.length;
+  const barW = gap * 0.68;
+  const COLORS = { rent: '#9FCBE3', payroll: '#2E6B91', opex: '#5BA8D1', buildout: '#D9714A' };
+  const ORDER = ['rent', 'payroll', 'opex', 'buildout'];
+
+  let bars = '';
+  data.forEach((d, i) => {
+    const x = padL + i * gap + (gap - barW) / 2;
+    let yTop = padT + innerH;
+    ORDER.forEach(key => {
+      const val = d[key];
+      const hgt = (val / maxTotal) * innerH;
+      yTop -= hgt;
+      if (hgt > 0.3) bars += `<rect x="${x.toFixed(1)}" y="${yTop.toFixed(1)}" width="${barW.toFixed(1)}" height="${hgt.toFixed(1)}" fill="${COLORS[key]}"/>`;
+    });
+  });
+
+  const yTicks = [0, maxTotal / 2, maxTotal];
+  const yLabels = yTicks.map(v => {
+    const y = padT + innerH - (v / maxTotal) * innerH;
+    return `<text x="${padL - 10}" y="${y.toFixed(1)}" text-anchor="end" dominant-baseline="middle" font-size="10" fill="#87A2B0">${fmtUSD(v)}</text>`;
+  }).join('');
+  const xLabels = [0, 6, 12, 18, 24, 30, 35].map(i => {
+    const x = padL + i * gap + gap / 2;
+    return `<text x="${x.toFixed(1)}" y="${h - padB + 16}" text-anchor="middle" font-size="10" fill="#87A2B0">M${i}</text>`;
+  }).join('');
+
+  box.innerHTML = `
+    <svg viewBox="0 0 ${w} ${h}" width="100%" style="overflow:visible;">
+      ${bars}
+      ${yLabels}
+      ${xLabels}
+    </svg>
+    <div class="cost-legend">
+      <span><i style="background:${COLORS.rent}"></i>Rent &amp; utilities</span>
+      <span><i style="background:${COLORS.payroll}"></i>Payroll</span>
+      <span><i style="background:${COLORS.opex}"></i>Running costs</span>
+      <span><i style="background:${COLORS.buildout}"></i>Fit-out &amp; equipment</span>
+    </div>
+  `;
+}
+function buildOnePager(result) {
+  const logoImg = document.querySelector('.brand .mark img');
+  const logoSrc = logoImg ? logoImg.src : '';
+  const tornadoTop = (() => {
+    const levers = [
+      { name: 'Investment level', key: 'scenarioTier', options: TIER_LIST },
+      { name: 'Rent location', key: 'rentBenchmark', options: RENT_LIST },
+      { name: 'Expansion route', key: 'pathway', options: PATHWAY_LIST },
+    ];
+    let top = null, topSwing = -1;
+    levers.forEach(lever => {
+      const results = lever.options.map(opt => runEngine(Object.assign({}, state, { [lever.key]: opt })).netCash36M);
+      const swing = Math.max(...results) - Math.min(...results);
+      if (swing > topSwing) { topSwing = swing; top = lever.name; }
+    });
+    return top;
+  })();
+
+  const takeaways = [
+    `${state.pathway} (${state.scenarioTier} tier) lands at ${fmtUSD(result.netCash36M)} net cash after 36 months.`,
+    result.breakevenMonth ? `Breaks even in month ${result.breakevenMonth}.` : `Does not break even within the 36-month window at this setting.`,
+    `${(result.recurringPctOfRevenue*100).toFixed(0)}% of monthly revenue is recurring membership/subscription income.`,
+    `${tornadoTop} has the single biggest effect on the 36-month outcome — worth getting right before anything else.`,
+  ];
+
+  const box = document.getElementById('onePager');
+  box.innerHTML = `
+    <div class="op-head">
+      <img src="${logoSrc}" alt="Longevity Group">
+      <div><div class="op-name">Longevity Group</div><div class="op-sub">API-AMS — Dubai Flagship Investment Summary</div></div>
+    </div>
+    <div class="op-scenario">${state.pathway} — ${state.scenarioTier}</div>
+    <div class="op-scenario-sub">Rent location: ${state.rentBenchmark} · Supplier strategy: ${state.procurementPosture} · FX: ${state.fxRate.toFixed(2)} AED/USD</div>
+    <div class="op-stats">
+      <div class="stat"><div class="label">Net cash — 36 months</div><div class="value ${result.netCash36M<0?'neg':''}">${fmtUSD(result.netCash36M)}</div></div>
+      <div class="stat"><div class="label">Total spend — 36 months</div><div class="value">${fmtUSD(result.burn36M)}</div></div>
+      <div class="stat"><div class="label">Time to breakeven</div><div class="value">${result.breakevenMonth ? 'Month '+result.breakevenMonth : 'Not in 36m'}</div></div>
+      <div class="stat"><div class="label">Recurring revenue</div><div class="value">${(result.recurringPctOfRevenue*100).toFixed(0)}%</div></div>
+    </div>
+    <div class="op-chart"><div id="onePagerChart"></div></div>
+    <ul class="op-takeaways">${takeaways.map(t => `<li>${t}</li>`).join('')}</ul>
+    <div class="op-footer">Modeled estimate based on current benchmarks and assumptions — for investment discussion, not a guaranteed forecast.</div>
+  `;
+  renderCashChart(result, 'onePagerChart');
+}
+
+function printOnePager() {
+  const result = runEngine(state);
+  buildOnePager(result);
+  document.getElementById('onePagerOverlay').classList.add('open');
+}
+
+function safePrint() {
+  document.body.classList.add('printing-summary');
+  let printFailed = false;
+  try {
+    window.print();
+  } catch (e) {
+    printFailed = true;
+    console.error('Print failed:', e);
+  } finally {
+    setTimeout(() => {
+      document.body.classList.remove('printing-summary');
+      if (printFailed) {
+        alert("Couldn't open the print dialog in this preview. Try opening this page directly in a browser tab, then use your browser's own print/save-as-PDF option (Ctrl/Cmd+P).");
+      }
+    }, 400);
+  }
+}
+
+async function runLiveCheck() {
+  const input = document.getElementById('liveCheckInput');
+  const query = input.value.trim();
+  const resultBox = document.getElementById('liveCheckResult');
+  const btn = document.getElementById('liveCheckBtn');
+  if (!query) {
+    resultBox.innerHTML = `<div class="live-check-result">Type something to search for first.</div>`;
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = 'Searching…';
+  resultBox.innerHTML = `<div class="live-check-result">Searching the web now…</div>`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 600,
+        messages: [{ role: 'user', content: `Search the web for this and give a short, direct, current answer with a specific figure or range if you can find one: ${query}. Keep the written answer to 2-3 sentences. List the source URLs you actually used.` }],
+        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+      }),
+    });
+    const data = await response.json();
+    const blocks = data.content || [];
+    const text = blocks.filter(b => b.type === 'text').map(b => b.text).join('\n').trim();
+    const sources = [];
+    blocks.forEach(b => {
+      if (b.type === 'web_search_tool_result' && Array.isArray(b.content)) {
+        b.content.forEach(r => { if (r.url) sources.push({ url: r.url, title: r.title || r.url }); });
+      }
+    });
+    const uniqueSources = sources.filter((s, i) => sources.findIndex(x => x.url === s.url) === i).slice(0, 5);
+    const sourcesHtml = uniqueSources.length
+      ? `<div class="lc-sources">Sources: ${uniqueSources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.title}</a>`).join(' · ')}</div>`
+      : '';
+    resultBox.innerHTML = `
+      <div class="live-check-result">
+        <div class="lc-timestamp">Checked just now</div>
+        ${text || 'No clear answer found — try rephrasing the question.'}
+        ${sourcesHtml}
+      </div>
+    `;
+  } catch (err) {
+    resultBox.innerHTML = `<div class="live-check-result">Couldn't reach the web search right now. This works automatically in this environment; if hosted on your own server it needs a small backend proxy holding your API key, same as the AI summary feature above.</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = 'Search now';
+}
+
+async function generateNarrative() {
+  const result = runEngine(state);
+  const box = document.getElementById('narrativeBox');
+  const btn = document.getElementById('narrativeBtn');
+  btn.disabled = true;
+  btn.textContent = 'Generating…';
+  box.innerHTML = '<div class="detail-empty">Thinking…</div>';
+
+  const prompt = `You are writing a tight, confident executive summary for investors looking at a Dubai longevity/wellness venture called Longevity Group. Use the real numbers below. Write 130-170 words, plain prose, no headers, no bullet points, no markdown formatting. Be direct about both strengths and risks — do not oversell.
+
+Scenario: ${state.pathway}, ${state.scenarioTier} tier, rent benchmark "${state.rentBenchmark}", procurement posture "${state.procurementPosture}", model layer "${state.modelLayer}", dependency mode "${state.dependencyMode}", risk outlook "${state.riskMode}".
+36-month net cash: ${fmtUSD(result.netCash36M)}.
+36-month cumulative burn: ${fmtUSD(result.burn36M)}.
+Breakeven: ${result.breakevenMonth ? 'month ' + result.breakevenMonth : 'not reached within 36 months'}.
+Steady monthly revenue: ${fmtUSD(result.steadyMonthlyRevenue)}.
+Recurring revenue share: ${(result.recurringPctOfRevenue*100).toFixed(0)}%.
+Franchise/replication margin at maturity: ${fmtUSD(result.replication.totalMargin)}/month across follow-on sites.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 400,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+    const data = await response.json();
+    const text = (data.content || []).map(b => b.text || '').join('\n').trim();
+    box.innerHTML = `<div class="narrative-text">${text || 'No response received.'}</div>`;
+  } catch (err) {
+    box.innerHTML = `<div class="detail-empty">Couldn't generate a summary right now. If this page is hosted on its own server (outside the environment it was built in), the summary feature needs a small backend to call the AI service securely — see the maintainer note in the page source for a ready-to-use example.</div>`;
+  }
+  btn.disabled = false;
+  btn.textContent = '✦ Generate executive summary';
+}
+
+
+const EQUIP_DISPLAY_NAMES = {
+  'EWOT setup': 'EWOT setup (exercise-with-oxygen training)',
+  'Hypoxic / IHT setup': 'Altitude training setup',
+  'Pet-safe PEMF / red light': 'Pet recovery therapy device',
+  'HBOT monoplace chamber': 'Hyperbaric oxygen chamber',
+  'Red light / PEMF bundle': 'Light & recovery therapy bundle',
+  'IHHT station': 'Altitude training station',
+  'IHHT / compact exercise kit': 'Altitude training kit',
+  'PRP / diagnostics pack': 'Regenerative therapy & diagnostics pack',
+};
+function equipDisplayName(name) { return EQUIP_DISPLAY_NAMES[name] || name; }
+
+function renderModuleDetail(result) {
+  const f = result.facility[selectedModule];
+  const rev = result.revenue[selectedModule];
+  const pay = result.staffing[selectedModule];
+  const box = document.getElementById('moduleDetailBox');
+
+  const override = state.overrides.included[selectedModule];
+  const isForced = override != null;
+  const toggleBlock = `
+    <div class="role-panel" style="margin-top:0; margin-bottom:14px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+      <span class="role-name">${f.included ? 'This unit is open in this scenario' : 'This unit is closed in this scenario'}${isForced ? ' (manually forced)' : ' (from the selected route)'}</span>
+      <div style="display:flex; gap:8px;">
+        <button class="icon-btn toggle-include-btn" data-mod="${selectedModule}">${f.included ? 'Force closed' : 'Force open'}</button>
+        ${isForced ? `<button class="icon-btn toggle-include-reset" data-mod="${selectedModule}">Use route default</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  if (!f.included) {
+    box.innerHTML = toggleBlock + `<div class="detail-empty">${selectedModule} is currently closed — switch it on above to see its numbers and overrides.</div>`;
+    const openBtn = box.querySelector('.toggle-include-btn');
+    if (openBtn) {
+      openBtn.addEventListener('click', e => {
+        state.overrides.included[e.target.dataset.mod] = true;
+        render();
+      });
+    }
+    return;
+  }
+  const monthRevenueAtFullRamp = rev.transferApplicable ? rev.primaryEquivRevenue : rev.steadyRevenue;
+  const tierIdx = { Lean: 0, Base: 1, Premium: 2 }[state.scenarioTier];
+  const roles = STAFFING_ROLES.filter(r => r[1] === selectedModule);
+  const roleRows = roles.map(([role, mod, lean, base, premium]) => {
+    const tierQty = [lean, base, premium][tierIdx];
+    const override = state.overrides.staffQty[role];
+    const effectiveQty = override != null ? override : tierQty;
+    return `
+      <div class="role-row">
+        <span class="role-name">${role}</span>
+        <span class="role-default">Default: ${tierQty}</span>
+        <input type="number" min="0" step="0.5" class="role-input" data-role="${role}" value="${effectiveQty}">
+      </div>
+    `;
+  }).join('');
+
+  const equip = PROCUREMENT_LINES.filter(l => l[0] === selectedModule);
+  const equipRows = equip.map(([mod, name, vendor, lean, base, premium]) => {
+    const tierQty = [lean, base, premium][tierIdx];
+    const override = state.overrides.procQty[name];
+    const effectiveQty = override != null ? override : tierQty;
+    return `
+      <div class="role-row">
+        <span class="role-name">${equipDisplayName(name)}</span>
+        <span class="role-default">Default: ${tierQty}</span>
+        <input type="number" min="0" step="1" class="equip-input" data-equip="${name}" value="${effectiveQty}">
+      </div>
+    `;
+  }).join('');
+
+  const rentOverride = state.overrides.monthlyRent[selectedModule];
+  const openOverride = state.overrides.openMonth[selectedModule];
+
+  box.innerHTML = toggleBlock + `
+    <div class="detail-grid">
+      <div class="detail-item"><span>Location</span><b>${f.resolvedGeo}${f.geoMode === 'Interim' ? ' (temporary, before Dubai)' : ''}</b></div>
+      <div class="detail-item"><span>Active area</span><b>${f.activeArea} m²</b></div>
+      <div class="detail-item"><span>Planned open month</span><b>Month ${f.plannedOpenMonth}</b></div>
+      <div class="detail-item"><span>Main delay driver</span><b>${f.bindingReason}<span class="tip" data-tooltip="Licensing delay: ${f.baseLicenseDelay.toFixed(1)} months base + ${f.dependencyDelay.toFixed(1)} months for partner/approval dependencies, before geography and planning-style adjustments." tabindex="0">?</span></b></div>
+      <div class="detail-item"><span>Monthly rent</span><b>${fmtUSD(f.monthlyRent)}</b></div>
+      <div class="detail-item"><span>Monthly running costs</span><b>${fmtUSD(f.monthlyOpex)}</b></div>
+      <div class="detail-item"><span>Monthly payroll</span><b>${fmtUSD(pay)}</b></div>
+      <div class="detail-item"><span>Revenue once fully running</span><b>${fmtUSD(monthRevenueAtFullRamp)}</b></div>
+      <div class="detail-item"><span>Move to Dubai</span><b>${rev.transferApplicable ? 'Month ' + rev.transferEventMonth + ', reopens month ' + rev.resumeMonth : 'Not applicable'}</b></div>
+    </div>
+    <div class="role-panel">
+      <div class="role-panel-title">Rent &amp; timing — override the modeled defaults for this unit</div>
+      <div class="role-row" style="grid-template-columns: 1fr 110px;">
+        <span class="role-name">Monthly rent (USD)</span>
+        <input type="number" min="0" step="100" class="rent-input" placeholder="auto" value="${rentOverride != null ? rentOverride : ''}">
+      </div>
+      <div class="role-row" style="grid-template-columns: 1fr 110px;">
+        <span class="role-name">Open in month (instead of ${f.plannedOpenMonth})</span>
+        <input type="number" min="0" step="1" class="open-month-input" placeholder="auto" value="${openOverride != null ? openOverride : ''}">
+      </div>
+    </div>
+    <div class="role-panel">
+      <div class="role-panel-title">Staffing — override any headcount<span class="tip" data-tooltip="Type a number to override the default for that pricing tier. Clear it (or set it back to the default) to go back to automatic." tabindex="0">?</span></div>
+      ${roleRows || '<div class="detail-empty">No dedicated roles for this unit.</div>'}
+    </div>
+    <div class="role-panel">
+      <div class="role-panel-title">Equipment — override quantities</div>
+      ${equipRows || '<div class="detail-empty">No dedicated equipment line items for this unit.</div>'}
+    </div>
+  `;
+  function parseAndClamp(rawVal, min, max) {
+    const n = parseFloat(rawVal);
+    if (isNaN(n)) return null;
+    return Math.min(max, Math.max(min, n));
+  }
+  box.querySelectorAll('.role-input').forEach(input => {
+    input.addEventListener('change', e => {
+      const role = e.target.dataset.role;
+      const val = e.target.value;
+      if (val === '') { delete state.overrides.staffQty[role]; }
+      else {
+        const clamped = parseAndClamp(val, 0, 50);
+        if (clamped == null) { delete state.overrides.staffQty[role]; }
+        else { state.overrides.staffQty[role] = clamped; e.target.value = clamped; }
+      }
+      render();
+    });
+  });
+  box.querySelectorAll('.equip-input').forEach(input => {
+    input.addEventListener('change', e => {
+      const name = e.target.dataset.equip;
+      const val = e.target.value;
+      if (val === '') { delete state.overrides.procQty[name]; }
+      else {
+        const clamped = parseAndClamp(val, 0, 100);
+        if (clamped == null) { delete state.overrides.procQty[name]; }
+        else { state.overrides.procQty[name] = clamped; e.target.value = clamped; }
+      }
+      render();
+    });
+  });
+  const rentInput = box.querySelector('.rent-input');
+  if (rentInput) {
+    rentInput.addEventListener('change', e => {
+      const val = e.target.value;
+      if (val === '') { delete state.overrides.monthlyRent[selectedModule]; }
+      else {
+        const clamped = parseAndClamp(val, 0, 500000);
+        if (clamped == null) { delete state.overrides.monthlyRent[selectedModule]; }
+        else { state.overrides.monthlyRent[selectedModule] = clamped; e.target.value = clamped; }
+      }
+      render();
+    });
+  }
+  const openMonthInput = box.querySelector('.open-month-input');
+  if (openMonthInput) {
+    openMonthInput.addEventListener('change', e => {
+      const val = e.target.value;
+      if (val === '') { delete state.overrides.openMonth[selectedModule]; }
+      else {
+        const clamped = parseAndClamp(val, 0, 36);
+        if (clamped == null) { delete state.overrides.openMonth[selectedModule]; }
+        else { state.overrides.openMonth[selectedModule] = Math.round(clamped); e.target.value = Math.round(clamped); }
+      }
+      render();
+    });
+  }
+  const closeBtn = box.querySelector('.toggle-include-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', e => {
+      state.overrides.included[e.target.dataset.mod] = false;
+      render();
+    });
+  }
+  const resetBtn2 = box.querySelector('.toggle-include-reset');
+  if (resetBtn2) {
+    resetBtn2.addEventListener('click', e => {
+      delete state.overrides.included[e.target.dataset.mod];
+      render();
+    });
+  }
+}
+
+function renderCompare(result) {
+  const panel = document.getElementById('comparePanel');
+  if (!pinnedScenario) {
+    panel.innerHTML = `<div class="detail-empty">No scenario pinned yet. Click "Pin current scenario" to compare it against whatever you build next.</div>`;
+    return;
+  }
+  const pinnedResult = runEngine(pinnedScenario);
+  const rows = [
+    ['Pathway', pinnedScenario.pathway, state.pathway],
+    ['Scenario tier', pinnedScenario.scenarioTier, state.scenarioTier],
+    ['36M Net Cash', fmtUSD(pinnedResult.netCash36M), fmtUSD(result.netCash36M)],
+    ['36M Burn', fmtUSD(pinnedResult.burn36M), fmtUSD(result.burn36M)],
+    ['Breakeven', pinnedResult.breakevenMonth ? 'Month ' + pinnedResult.breakevenMonth : 'Not in 36m', result.breakevenMonth ? 'Month ' + result.breakevenMonth : 'Not in 36m'],
+    ['% Recurring revenue', (pinnedResult.recurringPctOfRevenue*100).toFixed(0) + '%', (result.recurringPctOfRevenue*100).toFixed(0) + '%'],
+  ];
+  panel.innerHTML = `
+    <table class="pw-table">
+      <thead><tr><th>Metric</th><th>Pinned</th><th>Current</th></tr></thead>
+      <tbody>
+        ${rows.map(r => `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td></tr>`).join('')}
+      </tbody>
+    </table>
+  `;
+}
+
+
+const PATHWAY_LIST = Object.keys(PATHWAYS);
+const RENT_LIST = Object.keys(RENT_BENCHMARKS);
+const PROC_LIST = Object.keys(PROCUREMENT_POSTURE);
+const TIER_LIST = ['Lean', 'Base', 'Premium'];
+const MODEL_LAYER_LIST = ['Simplified', 'Realistic'];
+const DEPENDENCY_LIST = ['Light', 'Base', 'Heavy'];
+const RISK_LIST = ['Optimistic', 'Expected', 'Pessimistic'];
+const PATHWAY_GEO = {
+  'Dubai Direct Flagship': null, 'Dubai Public-Floor-First': null, 'Dubai Gym-First': null,
+  'Dubai Staged: Public+Gym → Clinic': null,
+  'UAE Pilot → Dubai Flagship': 'UAE Other',
+  'Turkey Bridge → Dubai Flagship': 'Turkey',
+  'Geneva Bridge → Dubai Flagship': 'Geneva',
+  'Palma Wellness Showroom → Dubai': 'Palma',
+};
+
+function buildPillGroup(containerId, list, currentVal, onPick) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = '';
+  list.forEach(val => {
+    const b = document.createElement('button');
+    b.className = 'pill' + (val === currentVal ? ' active' : '');
+    b.textContent = val;
+    b.addEventListener('click', () => onPick(val));
+    el.appendChild(b);
+  });
+}
+
+function render() {
+  try {
+  const result = runEngine(state);
+  const resolved = resolvePathway(state);
+
+  // Hero
+  document.getElementById('scenarioTitle').textContent = `${state.pathway} — ${state.scenarioTier}`;
+  document.getElementById('scenarioSub').textContent =
+    `Rent location: ${state.rentBenchmark} · Supplier strategy: ${state.procurementPosture} · Planning style: ${state.modelLayer} · FX: ${state.fxRate.toFixed(2)} AED/USD`;
+
+  // Stats
+  const ncEl = document.getElementById('statNetCash');
+  ncEl.textContent = fmtUSD(result.netCash36M);
+  ncEl.classList.toggle('neg', result.netCash36M < 0);
+  document.getElementById('statBurn').textContent = fmtUSD(result.burn36M);
+  document.getElementById('statBreakeven').textContent = result.breakevenMonth ? ('Month ' + result.breakevenMonth) : 'Not within 36m';
+  document.getElementById('statRecurring').textContent = (result.recurringPctOfRevenue * 100).toFixed(0) + '%';
+  document.getElementById('statFirstRevenue').textContent = result.firstRevenueMonth != null ? ('Month ' + result.firstRevenueMonth) : '—';
+  document.getElementById('statTransferCost').textContent = fmtUSD(result.totalTransferCost);
+
+  // Recommendation line: same confidence-weighted logic as the routes table, surfaced as one sentence
+  const recLevers = PATHWAY_LIST.map(pname => {
+    const r = runEngine(Object.assign({}, state, { pathway: pname }));
+    const bridge = PATHWAY_GEO[pname];
+    const conf = bridge ? GEOGRAPHY[bridge].confidence : 9;
+    return { pname, score: r.netCash36M * (0.7 + 0.3 * conf / 10), r };
+  });
+  const topRec = recLevers.reduce((best, cur) => cur.score > best.score ? cur : best, recLevers[0]);
+  document.getElementById('recommendationLine').innerHTML =
+    `<b>Recommendation:</b> ${topRec.pname} — ${fmtUSD(topRec.r.netCash36M)} net cash, ${topRec.r.breakevenMonth ? 'breakeven month ' + topRec.r.breakevenMonth : 'no breakeven within 36 months'}.`;
+
+  renderCashChart(result);
+  renderCostBreakdownChart(result);
+
+  // Controls
+  buildPillGroup('tierPills', TIER_LIST, state.scenarioTier, v => { state.scenarioTier = v; render(); });
+  buildPillGroup('rentPills', RENT_LIST, state.rentBenchmark, v => { state.rentBenchmark = v; render(); });
+  buildPillGroup('procPills', PROC_LIST, state.procurementPosture, v => { state.procurementPosture = v; render(); });
+  buildPillGroup('modelPills', MODEL_LAYER_LIST, state.modelLayer, v => { state.modelLayer = v; render(); });
+  buildPillGroup('depPills', DEPENDENCY_LIST, state.dependencyMode, v => { state.dependencyMode = v; render(); });
+  buildPillGroup('riskPills', RISK_LIST, state.riskMode, v => { state.riskMode = v; render(); });
+
+  // FX slider
+  const fxSlider = document.getElementById('fxSlider');
+  fxSlider.value = state.fxRate;
+  document.getElementById('fxValue').textContent = state.fxRate.toFixed(4) + ' AED/USD';
+  const sitesSlider = document.getElementById('sitesSlider');
+  sitesSlider.value = state.followOnSites;
+  document.getElementById('sitesValue').textContent = state.followOnSites + (state.followOnSites === 1 ? ' site' : ' sites');
+
+  // Pathway table (clickable -> sets pathway)
+  const pwBody = document.getElementById('pwBody');
+  pwBody.innerHTML = '';
+  const pathwayResults = PATHWAY_LIST.map(pname => {
+    const testInputs = Object.assign({}, state, { pathway: pname });
+    const r = runEngine(testInputs);
+    const bridge = PATHWAY_GEO[pname];
+    const conf = bridge ? GEOGRAPHY[bridge].confidence : 9;
+    const adjustedScore = r.netCash36M * (0.7 + 0.3 * conf / 10);
+    return { pname, r, bridge, conf, adjustedScore };
+  });
+  const ranked = [...pathwayResults].sort((a, b) => b.adjustedScore - a.adjustedScore);
+  ranked.forEach(({ pname, r, bridge, conf, adjustedScore }, idx) => {
+    const tr = document.createElement('tr');
+    if (pname === state.pathway) tr.classList.add('selected');
+    const isBest = idx === 0;
+    tr.innerHTML = `
+      <td class="num" style="color:var(--muted); font-size:13px;">#${idx + 1}</td>
+      <td>${pname} ${isBest ? '<span class="badge recommended">Recommended</span>' : ''}</td>
+      <td>${bridge ? `<span class="badge bridge">${bridge}</span>` : `<span class="badge">Dubai only</span>`}</td>
+      <td><span class="conf-dot" style="background:${confColor(conf)}"></span>${conf}/10</td>
+      <td class="num ${r.netCash36M < 0 ? 'neg' : ''}">${fmtUSD(r.netCash36M)}</td>
+      <td class="num">${fmtUSD(r.burn36M)}</td>
+      <td>${r.breakevenMonth ? 'Month ' + r.breakevenMonth : 'Not within 36m'}</td>
+    `;
+    tr.addEventListener('click', () => { state.pathway = pname; render(); });
+    pwBody.appendChild(tr);
+  });
+
+  // Robustness grid: every pathway tested across Risk Outlook x Planning Style
+  const robustBody = document.getElementById('robustBody');
+  robustBody.innerHTML = '';
+  PATHWAY_LIST.forEach(pname => {
+    const outcomes = [];
+    RISK_LIST.forEach(risk => {
+      MODEL_LAYER_LIST.forEach(model => {
+        const testInputs = Object.assign({}, state, { pathway: pname, riskMode: risk, modelLayer: model });
+        outcomes.push(runEngine(testInputs).netCash36M);
+      });
+    });
+    const avg = outcomes.reduce((s, v) => s + v, 0) / outcomes.length;
+    const worst = Math.min(...outcomes);
+    const best = Math.max(...outcomes);
+    const tr = document.createElement('tr');
+    if (pname === state.pathway) tr.classList.add('selected');
+    tr.innerHTML = `
+      <td>${pname}</td>
+      <td class="num ${avg < 0 ? 'neg' : ''}">${fmtUSD(avg)}</td>
+      <td class="num ${worst < 0 ? 'neg' : ''}">${fmtUSD(worst)}</td>
+      <td class="num">${fmtUSD(best)}</td>
+    `;
+    tr.addEventListener('click', () => { state.pathway = pname; render(); });
+    robustBody.appendChild(tr);
+  });
+
+  // Revenue mix (live from engine)
+  const mixBody = document.getElementById('mixBody');
+  mixBody.innerHTML = '';
+  const recurringPct = { PublicCore: 0.30, Kitchen: 0.20, Cafe: 0.10, Store: 0.15, Gym: 0.70, Pets: 0.40, Apartment: 0.20, Containers: 0.10, Clinic: 0.55 };
+  const overallPct = result.recurringPctOfRevenue;
+  const r = 30, circ = 2 * Math.PI * r;
+  const dashOn = circ * overallPct, dashOff = circ - dashOn;
+  document.getElementById('mixDonut').innerHTML = `
+    <svg width="76" height="76" viewBox="0 0 76 76">
+      <circle cx="38" cy="38" r="${r}" fill="none" stroke="#DCEBF2" stroke-width="10"/>
+      <circle cx="38" cy="38" r="${r}" fill="none" stroke="#5BA8D1" stroke-width="10"
+        stroke-dasharray="${dashOn.toFixed(1)} ${dashOff.toFixed(1)}" stroke-dashoffset="${(circ/4).toFixed(1)}" stroke-linecap="round"/>
+      <text x="38" y="42" text-anchor="middle" font-family="Spectral, serif" font-size="17" fill="#1E3645" font-weight="500">${Math.round(overallPct*100)}%</text>
+    </svg>
+  `;
+  MODULES.forEach(mod => {
+    if (!result.facility[mod].included) return;
+    const pct = Math.round(recurringPct[mod] * 100);
+    const row = document.createElement('div');
+    row.className = 'mix-row';
+    row.innerHTML = `
+      <div class="mname">${mod}</div>
+      <div class="mix-bar"><div class="rec" style="width:${pct}%"></div><div class="trans" style="width:${100-pct}%"></div></div>
+      <div class="mpct">${pct}%</div>
+    `;
+    mixBody.appendChild(row);
+  });
+
+  // Replication (live from engine)
+  const repTotals = document.getElementById('repTotals');
+  repTotals.innerHTML = `
+    <div class="detail-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="detail-item"><span>Follow-on sites assumed</span><b>${state.followOnSites}</b></div>
+      <div class="detail-item"><span>Total upfront cost to franchisees</span><b>${fmtUSD(result.replication.totalCapex)}</b></div>
+      <div class="detail-item"><span>Total monthly margin to Longevity</span><b>${fmtUSD(result.replication.totalMargin)}</b></div>
+    </div>
+  `;
+  const repBody = document.getElementById('repBody');
+  repBody.innerHTML = '';
+  result.replication.rows.forEach(r => {
+    const card = document.createElement('div');
+    card.className = 'rep-card';
+    const paybackStr = r.payback != null ? r.payback.toFixed(1) + ' mo' : 'n/a';
+    card.innerHTML = `
+      <div class="rname">${r.module} <span style="color:var(--muted); font-weight:400;">— ${r.format}</span></div>
+      <div class="rrow"><span>Upfront cost to open</span><b>${fmtUSD(r.capex)}</b></div>
+      <div class="rrow"><span>Monthly profit</span><b>${fmtUSD(r.netProfit)}</b></div>
+      <div class="rrow"><span>Payback</span><b>${paybackStr}</b></div>
+    `;
+    repBody.appendChild(card);
+  });
+
+  // Live tornado (recompute all levers against the CURRENT baseline state, in-browser, instantly)
+  const tornBody = document.getElementById('tornBody');
+  tornBody.innerHTML = '';
+  const levers = [
+    { name: 'Scenario Tier', key: 'scenarioTier', options: TIER_LIST },
+    { name: 'Rent Benchmark', key: 'rentBenchmark', options: RENT_LIST },
+    { name: 'Procurement Posture', key: 'procurementPosture', options: PROC_LIST },
+    { name: 'Model Layer', key: 'modelLayer', options: MODEL_LAYER_LIST },
+    { name: 'Dependency Mode', key: 'dependencyMode', options: DEPENDENCY_LIST },
+    { name: 'Risk Outlook', key: 'riskMode', options: RISK_LIST },
+    { name: 'Pathway', key: 'pathway', options: PATHWAY_LIST },
+  ];
+  const tornadoData = levers.map(lever => {
+    const results = lever.options.map(opt => {
+      const testInputs = Object.assign({}, state, { [lever.key]: opt });
+      return runEngine(testInputs).netCash36M;
+    });
+    return { name: lever.name, best: Math.max(...results), worst: Math.min(...results) };
+  });
+  tornadoData.sort((a, b) => (b.best - b.worst) - (a.best - a.worst));
+  const maxAbs = Math.max(...tornadoData.map(t => Math.max(Math.abs(t.best), Math.abs(t.worst))));
+  tornadoData.forEach(t => {
+    const bestPct = (Math.abs(t.best) / maxAbs) * 50;
+    const worstPct = (Math.abs(t.worst) / maxAbs) * 50;
+    const bestLeft = t.best >= 0 ? 50 : 50 - bestPct;
+    const worstLeft = t.worst >= 0 ? 50 : 50 - worstPct;
+    const row = document.createElement('div');
+    row.className = 'torn-row';
+    row.innerHTML = `
+      <div class="tname">${t.name}</div>
+      <div>
+        <div class="torn-track">
+          <div class="torn-bar worst" style="left:${worstLeft}%; width:${worstPct}%"></div>
+          <div class="torn-bar best" style="left:${bestLeft}%; width:${bestPct}%"></div>
+        </div>
+        <div class="torn-vals"><span>Worst: ${fmtUSD(t.worst)}</span><span>Best: ${fmtUSD(t.best)}</span></div>
+      </div>
+    `;
+    tornBody.appendChild(row);
+  });
+
+  // Module detail
+  buildPillGroup('modulePills', MODULES, selectedModule, v => { selectedModule = v; render(); });
+  renderModuleDetail(result);
+
+  // Scenario compare
+  renderCompare(result);
+  } catch (err) {
+    console.error('Render failed:', err);
+    const app = document.querySelector('.app');
+    if (app) app.insertAdjacentHTML('afterbegin', '<div style="padding:18px 40px;background:#FBEAEA;color:#A33A3A;font-size:13px;">Something went wrong updating this page (' + err.message + '). Try clicking "Reset to baseline".</div>');
+  }
+}
+
+document.getElementById('pinBtn').addEventListener('click', () => {
+  pinnedScenario = JSON.parse(JSON.stringify(state));
+  render();
+});
+document.getElementById('printBtn').addEventListener('click', safePrint);
+document.getElementById('onePagerPrintBtn').addEventListener('click', safePrint);
+document.getElementById('onePagerCloseBtn').addEventListener('click', () => {
+  document.getElementById('onePagerOverlay').classList.remove('open');
+});
+document.getElementById('onePagerOverlay').addEventListener('click', e => {
+  if (e.target.id === 'onePagerOverlay') e.target.classList.remove('open');
+});
+document.getElementById('narrativeBtn').addEventListener('click', generateNarrative);
+document.getElementById('liveCheckToggle').addEventListener('click', () => {
+  const panel = document.getElementById('liveCheckPanel');
+  const isHidden = panel.style.display === 'none';
+  panel.style.display = isHidden ? 'block' : 'none';
+});
+document.getElementById('liveCheckBtn').addEventListener('click', runLiveCheck);
+document.getElementById('liveCheckInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runLiveCheck();
+});
+
+document.getElementById('fxSlider').addEventListener('input', e => {
+  state.fxRate = parseFloat(e.target.value);
+  render();
+});
+document.getElementById('sitesSlider').addEventListener('input', e => {
+  state.followOnSites = parseInt(e.target.value, 10);
+  render();
+});
+document.getElementById('resetBtn').addEventListener('click', () => { state = defaultInputs(); render(); });
+document.getElementById('onePagerBtn').addEventListener('click', printOnePager);
+
+document.querySelectorAll('.section-nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const id = link.getAttribute('href').slice(1);
+    const target = document.getElementById(id);
+    if (target && target.scrollIntoView) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+function showSharedTooltip(tipEl) {
+  const tooltip = document.getElementById('sharedTooltip');
+  const text = tipEl.getAttribute('data-tooltip');
+  if (!text) return;
+  tooltip.textContent = text;
+  tooltip.classList.add('show');
+
+  const rect = tipEl.getBoundingClientRect();
+  const tw = tooltip.offsetWidth;
+  const th = tooltip.offsetHeight;
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const margin = 8;
+
+  let left = rect.left + rect.width / 2 - tw / 2;
+  left = Math.max(margin, Math.min(left, vw - tw - margin));
+
+  let top = rect.top - th - 8;
+  let arrowBelow = false;
+  if (top < margin) {
+    top = rect.bottom + 8;
+    arrowBelow = true;
+  }
+  if (top + th > vh - margin) top = Math.max(margin, vh - th - margin);
+
+  tooltip.style.left = left + 'px';
+  tooltip.style.top = top + 'px';
+}
+
+function hideSharedTooltip() {
+  document.getElementById('sharedTooltip').classList.remove('show');
+}
+
+document.addEventListener('mouseover', e => {
+  const tip = e.target.closest('.tip');
+  if (tip) showSharedTooltip(tip);
+});
+document.addEventListener('mouseout', e => {
+  const tip = e.target.closest('.tip');
+  if (tip) hideSharedTooltip();
+});
+document.addEventListener('focusin', e => {
+  const tip = e.target.closest('.tip');
+  if (tip) showSharedTooltip(tip);
+});
+document.addEventListener('focusout', e => {
+  const tip = e.target.closest('.tip');
+  if (tip) hideSharedTooltip();
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.tip')) hideSharedTooltip();
+});
+document.addEventListener('touchstart', e => {
+  if (!e.target.closest('.tip')) hideSharedTooltip();
+}, { passive: true });
+
+render();
+
+
+</script>
+</body>
+</html>
